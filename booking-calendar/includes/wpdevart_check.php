@@ -127,7 +127,7 @@ class wpdevartCeck {
 						$max_available = $array["available"];
 					}
 					if($array['price']){
-						$price += $array['price'];			
+						$price += (int)$array['price'];			
 					}	
 					
 					$count += 1;
@@ -150,7 +150,7 @@ class wpdevartCeck {
 				$max_available = $hour["available"];
 			} 
 			if($start == 1) {
-				$price += $hour["price"];
+				$price += (int)$hour["price"];
 				if($hour["available"] < $max_available) {
 					$max_available = $hour["available"];
 				}

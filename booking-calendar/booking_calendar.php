@@ -4,11 +4,12 @@
  * Plugin URI: https://wpdevart.com/wordpress-booking-calendar-plugin
  * Author URI: https://wpdevart.com 
  * Description: WordPress Booking Calendar plugin is an awesome tool to create a booking system for your website. Create booking calendars in a few minutes.
- * Version: 3.2.15
+ * Version: 3.2.16
  * Author: WpDevArt
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: booking-calendar
  */
+ 
  
 defined('ABSPATH') || die('Access Denied');
 class wpdevart_bc_calendar{
@@ -93,6 +94,7 @@ class wpdevart_bc_calendar{
 		if (empty($id)) {
 			return;
 		}
+		$id = intval($id);
 		$result = $this->wpdevart_booking_calendar($id);
 		self::$booking_count += 1;
 		return  $result;
@@ -182,7 +184,10 @@ class wpdevart_bc_calendar{
 
 		add_action( 'wp_ajax_nopriv_wpdevart_payment_ajax', array($this,'wpdevart_payment_ajax') );
 		add_action( 'wp_ajax_wpdevart_payment_ajax', array($this,'wpdevart_payment_ajax') );
-
+/**/
+		add_action( 'wp_ajax_nopriv_wpdevart_payment', array($this,'wpdevart_payment') );
+		add_action( 'wp_ajax_wpdevart_payment', array($this,'wpdevart_payment') );
+/**/
 		add_action( 'wp_ajax_wpdevart_quick_update', array($this,'wpdevart_quick_update') );
 
 		add_action( 'wp_ajax_nopriv_wpdevart_captcha', array($this,'wpdevart_captcha') );
@@ -575,8 +580,16 @@ class wpdevart_bc_calendar{
 		$main_class->main_payment_ajax();
 		wp_die();
 	}
-
-
+	
+	public function wpdevart_payment() {
+		if(!check_ajax_referer('wpdevart_ajax_nonce', 'wpdevart_nonce')) {
+			die('Request has failed.');
+		}
+		require_once(WPDEVART_PLUGIN_DIR . 'admin/controllers/Payment.php');
+		$controller = new wpdevart_bc_ControllerPayments();
+		$controller->perform();
+	}
+	
 	public function wpdevart_quick_update() {
 		$capability = wpdevart_bc_Library::get_capability('reservation_page');
 		if(!check_ajax_referer('wpdevart_ajax_nonce', 'wpdevart_nonce') || !current_user_can($capability)) {

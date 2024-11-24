@@ -4,7 +4,7 @@ class wpdevart_bc_Library {
 	public function __construct() {
 		
 	}
-		
+	
 	public static function get_capability( $page ) {
 		$capability = 'publish_pages';
 		if ( get_option( 'wpdevart_permissions' ) !== false ) {
@@ -16,7 +16,7 @@ class wpdevart_bc_Library {
 		}
 		return $capability;
 	}
-	
+
 	public static function wpdevart_header($args = array()) { ?>
 		<div class="wpdevart_plugins_header div-for-clear">
 			<?php if (WPDEVART_PRO != 'extended') {  ?>
