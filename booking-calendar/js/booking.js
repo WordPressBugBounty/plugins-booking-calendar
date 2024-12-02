@@ -1292,7 +1292,6 @@ function wpdevartec_submit(el,booking_id){
 		type = type.split(",");
 		jQuery.each(this.files, function(i, file) {
 		    var file_type =  file.name.split('.').pop().toLowerCase();
-			console.log(file,size, file.size);
 			if(size != "" && size < file.size){
 				alert(label + ": " + wpdevart.file_size);
 				error++;

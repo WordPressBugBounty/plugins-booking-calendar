@@ -1285,13 +1285,29 @@ class wpdevart_bc_BookingCalendar {
 		return $name ;
 	}
 	
+	private function cleanContentSvg($content) {
+		$content = preg_replace('/<script\b[^>]*>.*?<\/script>/is', '', $content);
+		$content = preg_replace('/<iframe\b[^>]*>.*?<\/iframe>/is', '', $content);
+		$content = preg_replace('/<(object|embed|applet|form|link|meta|style|base|bgsound|frame|frameset|layer|ilayer|input|textarea|button|select|option|isindex|textarea|img|a)\b[^>]*>.*?<\/\1>/is', '', $content);
+		$content = preg_replace('/\s(on\w+)[^>]*=["\'][^"\']*["\']/is', '', $content);
+		return $content;
+	}
+	
 	private function sanitizeSvgContent($fileTmpPath) {
 		$content = file_get_contents($fileTmpPath);
-		$content = preg_replace('/<script\b[^>]*>.*?<\/script>/is', "", $content);
-		$content = preg_replace('/<iframe\b[^>]*>.*?<\/iframe>/is', "", $content);
-		$content = preg_replace('/<(object|embed|applet|form|link|meta|style|base|bgsound|frame|frameset|layer|ilayer|input|textarea|button|select|option|isindex|textarea|img|a)\b[^>]*>.*?<\/\1>/is', "", $content);
-		$content = preg_replace('/\s(on\w+|xmlns)[^>]*=["\'][^"\']*["\']/is', "", $content);
-		return $content;
+		$content = preg_replace('/<!DOCTYPE[^>]*>/is', '', $content);
+		$maxIterations = 10;
+		$iteration = 0;
+		$previousContent = '';
+		while ($previousContent !== $content && $iteration < $maxIterations) {
+			$previousContent = $content;
+			$content = $this->cleanContentSvg($content);
+			$iteration++;
+		}
+		if ($iteration >= $maxIterations) {
+			return "Bad Svg";
+		}
+		return "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n".$content;
 	}
 
 	public function save_reserv($data,$submit,$type = ""){
