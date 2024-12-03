@@ -4,7 +4,7 @@ Donate link: https://wpdevart.com/wordpress-booking-calendar-plugin/
 Tags: Booking, booking system, appointment booking, Booking calendar, reservation calendar
 Requires at least: 3.4.0
 Tested up to: 6.7
-Stable tag: 3.2.18
+Stable tag: 3.2.19
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -1152,6 +1152,10 @@ Yes dear users, you need to pay only one time for our pro version.
 = 3.2.18 =
 
 * Fixed: Security issue
+
+= 3.2.19 =
+
+* Stable tag changed
 
 == Step by step guide ==
 
