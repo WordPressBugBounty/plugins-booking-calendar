@@ -63,16 +63,14 @@ class wpdevart_bc_ViewGlobalsettings {
 				<div id="wpdevart-tabs-container" class="div-for-clear">
 					<div id="wpdevart-tabs-item-container" class="div-for-clear">
 						<?php foreach( $wpdevart_themes as $key=>$wpdevart_setting ) { ?>
-							<div id="wpdevart_theme-tab-<?php echo $key; ?>_container" class="wpdevart_container wpdevart-item-section <?php echo ($key == "general")? "show" : ""; ?>"> 
-							<?php foreach( $wpdevart_setting['sections'] as $value_key=>$value_setting ) { ?>
-								
+							<div id="wpdevart_theme-tab-<?php echo esc_attr($key); ?>_container" class="wpdevart_container wpdevart-item-section <?php echo ($key == "general")? "show" : ""; ?>"> 
+							<?php foreach( $wpdevart_setting['sections'] as $value_key=>$value_setting ) { ?>								
 									<div>
 										<?php
 										foreach( $value_setting as $key => $wpdevart_setting_value ) {
 											if(isset($wpdevart_setting_value["extra_div"]) && $wpdevart_setting_value["extra_div"]){
 												echo "<div class='items_open'>";
-											}
-											
+											}											
 											if( isset($settings[$key]) ) {
 												$sett_value = $settings[$key];
 											} else if(isset($settings) && ($wpdevart_setting_value["type"] == "checkbox" || $wpdevart_setting_value["type"] == "checkbox_enable")){

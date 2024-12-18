@@ -84,14 +84,14 @@ class wpdevart_Main {
 				new WpdevartPayments($this->theme_option,$this->booking_id,$id,$res,$cal_name["title"]);
 				//wpdevart_bc_Library::wpdevart_redirect($url);
 			}
-		}	
-
+		}		
 		if(isset($this->theme_option['delete_prev_date']) && $this->theme_option['delete_prev_date'] == "on") {
 			$day = date( 'Y-m-d', strtotime("last day"));
 			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->prefix . "wpdevart_dates WHERE calendar_id= %d AND  day BETWEEN '1970-01-01' AND '%s'",	array( $id, $day ) ) );
 			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->prefix . "wpdevart_reservations WHERE calendar_id = %d AND  (single_day BETWEEN '1970-01-01' AND '%s' OR (check_in BETWEEN '1970-01-01' AND '%s' AND  check_out BETWEEN '1970-01-01' AND '%s'))" ,array( $id, $day, $day, $day) ) );
 		}
-		$for_trarray = $this->text_for_tr();			
+		$for_trarray = $this->text_for_tr();	
+			
 		
 		if ($date == '' && !isset( $_REQUEST['date'] )) {
 			$date = date( 'Y-m-d' );

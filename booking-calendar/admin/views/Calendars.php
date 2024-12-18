@@ -46,18 +46,18 @@ class wpdevart_bc_ViewCalendars {
 					<?php
 						foreach ( $rows as $row ) { 
 							$user = $row->user_id;
-							$user_info = get_userdata( $user );						?>
+							$user_info = get_userdata( $user );?>
 							<tr>
-								<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo $row->id; ?>"></td>
+								<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo esc_attr($row->id); ?>"></td>
 								<td><?php echo $row->id; ?></td>
-								<td><a href="<?php echo add_query_arg(array( 'page' => 'wpdevart-calendars', 'task' => 'edit', 'id' => $row->id ), admin_url('admin.php')); ?>"><?php echo $row->title; ?></a></td>
-								<td><input type="text" value="[wpdevart_booking_calendar id=&quot;<?php echo $row->id; ?>&quot;]" onclick="this.focus();this.select();" readonly="readonly" size="32"></td>
+								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-calendars', 'task' => 'edit', 'id' => esc_attr($row->id) ), admin_url('admin.php'))); ?>"><?php echo esc_html($row->title); ?></a></td>
+								<td><input type="text" value="[wpdevart_booking_calendar id=&quot;<?php echo esc_attr($row->id); ?>&quot;]" onclick="this.focus();this.select();" readonly="readonly" size="32"></td>
 								<?php if($role == "administrator"){
                                       ?>
-									<td><a href="<?php echo get_edit_user_link( $user ) ?>"><?php echo ($user_info)? $user_info->user_login : ""; ?></a></td>
+									<td><a href="<?php echo get_edit_user_link( $user ) ?>"><?php echo ($user_info)? esc_html($user_info->user_login) : ""; ?></a></td>
 								<?php } ?>	
-								<td><a href="<?php echo add_query_arg(array( 'page' => 'wpdevart-calendars', 'task' => 'edit', 'id' => $row->id ), admin_url('admin.php')); ?>"><?php _e('Edit','booking-calendar'); ?></a></td>
-								<td><a href="" onclick="wpdevart_set_value('task','delete'); wpdevart_set_value('cur_id','<?php echo $row->id; ?>'); wpdevart_form_submit(event, 'calendars_form')" ><?php _e('Delete','booking-calendar'); ?></a></td>
+								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-calendars', 'task' => 'edit', 'id' => esc_attr($row->id) ), admin_url('admin.php'))); ?>"><?php _e('Edit','booking-calendar'); ?></a></td>
+								<td><a href="" onclick="wpdevart_set_value('task','delete'); wpdevart_set_value('cur_id','<?php echo esc_attr($row->id); ?>'); wpdevart_form_submit(event, 'calendars_form')" ><?php _e('Delete','booking-calendar'); ?></a></td>
 							<tr>
 					<?php	}
 					?>
@@ -1044,13 +1044,13 @@ class wpdevart_bc_ViewCalendars {
 				<input type="submit" value="<?php _e('Save','booking-calendar'); ?>" class="action-link wpda-input" name="save" onclick="if(!jQuery('#theme_id option').length){alert('Add Theme'); return false;}">
 				<input type="submit" value="<?php _e('Apply','booking-calendar'); ?>" class="action-link wpda-input" name="apply" id="apply"  onclick="if(!jQuery('#theme_id option').length){alert('Add Theme'); return false;}">
 				<input type="hidden" name="task" value="save">
-				<input type="hidden" name="id" value="<?php echo $id; ?>">
-				<input type="hidden" name="current_date" value="<?php echo $current_date; ?>">
+				<input type="hidden" name="id" value="<?php echo esc_attr($id); ?>">
+				<input type="hidden" name="current_date" value="<?php echo esc_attr($current_date); ?>">
 				<?php wp_nonce_field( 'save_item', '_wpdevart_bc_nonce' ); ?>
 				<?php
 				  foreach( $wpdevart_calendars as $wpdevart_calendar ) { ?>
 					<div class="wpdevart-item-section"> 
-					    <h3><?php echo $wpdevart_calendar['title']; ?></h3>
+					    <h3><?php echo esc_html($wpdevart_calendar['title']); ?></h3>
 						<div class="wpdevart-item-section-cont">
 							<?php foreach( $wpdevart_calendar['value'] as $key => $wpdevart_calendars_value ) {
 								if ( !isset($calendar_rows) ) {
@@ -1074,7 +1074,7 @@ class wpdevart_bc_ViewCalendars {
 					  foreach( $wpdevart_calendar_form as $form_item ) {
 						$sett_value_cal = 0;			?>
 						<div class="wpdevart-item-section form-section"> 
-							<h3><?php echo $form_item['title']; ?></h3>
+							<h3><?php echo esc_html($form_item['title']); ?></h3>
 							<div class="wpdevart-item-section-cont">
 								<?php foreach( $form_item['value'] as $key => $value ) {
 									$sett_value_cal = $value['default'];

@@ -29,7 +29,7 @@ class wpdevart_bc_ViewThemes {
 				if($delete === true) {
 					$class = "updated";
 				} ?>
-				<div id="message" class="<?php echo $class; ?> notice is-dismissible"><p><?php echo $error_msg; ?></p></div>
+				<div id="message" class="<?php echo esc_attr($class); ?> notice is-dismissible"><p><?php echo esc_html($error_msg); ?></p></div>
 			<?php } ?>
 			<form action="admin.php?page=wpdevart-themes" method="post" id="themes_form">
 			<?php wpdevart_bc_Library::items_nav($items_nav['limit'],$items_nav['total'],'themes_form'); ?>
@@ -50,17 +50,17 @@ class wpdevart_bc_ViewThemes {
 					<?php
 						foreach ( $rows as $row ) { ?>
 							<tr>
-								<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo $row->id; ?>"></td>
-								<td><?php echo $row->id; ?></td>
-								<td><a href="<?php echo add_query_arg(array( 'page' => 'wpdevart-themes', 'task' => 'edit', 'id' => $row->id ), admin_url('admin.php')); ?>"><?php echo $row->title; ?></a></td>
+								<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo intval($row->id); ?>"></td>
+								<td><?php echo intval($row->id); ?></td>
+								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-themes', 'task' => 'edit', 'id' => intval($row->id) ), admin_url('admin.php'))); ?>"><?php echo esc_html($row->title); ?></a></td>
 								<?php if($role == "administrator"){
                                      $user = $row->user_id;
 									 $user_info = get_userdata( $user ); ?>
-									<td><a href="<?php echo get_edit_user_link( $user ) ?>"><?php echo ($user_info)? $user_info->user_login : ""; ?></a></td>
+									<td><a href="<?php echo esc_url(get_edit_user_link( $user )); ?>"><?php echo ($user_info)? esc_html($user_info->user_login) : ""; ?></a></td>
 								<?php } ?>	
-								<td><a href="<?php echo add_query_arg(array( 'page' => 'wpdevart-themes', 'task' => 'duplicate', 'id' => $row->id, '_wpdevart_bc_nonce' => wp_create_nonce( 'duplicate_item' ) ), admin_url('admin.php')); ?>"><?php _e('Duplicate','booking-calendar'); ?></a></td>
-								<td><a href="<?php echo add_query_arg(array( 'page' => 'wpdevart-themes', 'task' => 'edit', 'id' => $row->id ), admin_url('admin.php')); ?>"><?php _e('Edit','booking-calendar'); ?></a></td>
-								<td><a href="" onclick="wpdevart_set_value('task','delete'); wpdevart_set_value('cur_id','<?php echo $row->id; ?>'); wpdevart_form_submit(event, 'themes_form')" ><?php _e('Delete','booking-calendar'); ?></a></td>
+								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-themes', 'task' => 'duplicate', 'id' => intval($row->id), '_wpdevart_bc_nonce' => wp_create_nonce( 'duplicate_item' ) ), admin_url('admin.php'))); ?>"><?php _e('Duplicate','booking-calendar'); ?></a></td>
+								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-themes', 'task' => 'edit', 'id' => intval($row->id) ), admin_url('admin.php'))); ?>"><?php _e('Edit','booking-calendar'); ?></a></td>
+								<td><a href="" onclick="wpdevart_set_value('task','delete'); wpdevart_set_value('cur_id','<?php echo intval($row->id); ?>'); wpdevart_form_submit(event, 'themes_form')" ><?php _e('Delete','booking-calendar'); ?></a></td>
 							</tr>
 					<?php	}
 					?>
@@ -2425,13 +2425,13 @@ class wpdevart_bc_ViewThemes {
 				<div id="wpdevart-tabs-container" class="div-for-clear">
 					<div id="wpdevart_theme-tabs" class="div-for-clear">
 						<?php foreach($wpdevart_themes as $key=>$wpdevart_theme) { ?>
-							<div id="wpdevart_theme-tab-<?php echo $key; ?>" class="wpdevart_tab <?php echo ($key == "general")? "show" : ""; ?>"><?php echo $wpdevart_theme["title"];
+							<div id="wpdevart_theme-tab-<?php echo esc_attr($key); ?>" class="wpdevart_tab <?php echo ($key == "general")? "show" : ""; ?>"><?php echo esc_html($wpdevart_theme["title"]);
 							if(isset($wpdevart_theme["pro"]) &&  WPDEVART_PRO != "extended") {
 								if (WPDEVART_PRO == "free") {
-									echo "<span class='pro_feature'> (" . ucfirst($wpdevart_theme["pro"]) . " Feature!)</span>";
+									echo "<span class='pro_feature'> (" . esc_html(ucfirst($wpdevart_theme["pro"])) . " Feature!)</span>";
 								} 
 								elseif (WPDEVART_PRO == "pro" && $wpdevart_theme["pro"] == "extended") {
-									echo "<span class='pro_feature'> (" . ucfirst($wpdevart_theme["pro"]) . " Feature!)</span>";
+									echo "<span class='pro_feature'> (" . esc_html(ucfirst($wpdevart_theme["pro"])) . " Feature!)</span>";
 								}
 							}	
 							?>
@@ -2440,10 +2440,10 @@ class wpdevart_bc_ViewThemes {
 					</div>
 					<div id="wpdevart-tabs-item-container" class="div-for-clear">
 						<?php foreach( $wpdevart_themes as $key=>$wpdevart_setting ) { ?>
-							<div id="wpdevart_theme-tab-<?php echo $key; ?>_container" class="wpdevart_container wpdevart-item-section <?php echo ($key == "general")? "show" : ""; ?>"> 
+							<div id="wpdevart_theme-tab-<?php echo esc_attr($key); ?>_container" class="wpdevart_container wpdevart-item-section <?php echo ($key == "general")? "show" : ""; ?>"> 
 							<?php foreach( $wpdevart_setting['sections'] as $value_key=>$value_setting ) { ?>
 								<div class="wpdevart-item-section-cont">
-									<h3><?php echo str_replace("_"," ",$value_key); ?></h3>
+									<h3><?php echo esc_html(str_replace("_"," ",$value_key)); ?></h3>
 									<div>
 										<?php
 										foreach( $value_setting as $key => $wpdevart_setting_value ) {

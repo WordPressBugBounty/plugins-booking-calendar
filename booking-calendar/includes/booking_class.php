@@ -1284,7 +1284,6 @@ class wpdevart_bc_BookingCalendar {
 		$name       = date('M', strtotime( $date ));
 		return $name ;
 	}
-	
 	private function cleanContentSvg($content) {
 		$content = preg_replace('/<script\b[^>]*>.*?<\/script>/is', '', $content);
 		$content = preg_replace('/<iframe\b[^>]*>.*?<\/iframe>/is', '', $content);

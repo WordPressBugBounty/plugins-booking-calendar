@@ -29,7 +29,7 @@ class wpdevart_bc_ViewExtras {
 				if($delete === true) {
 					$class = "updated";
 				} ?>
-				<div id="message" class="<?php echo $class; ?> notice is-dismissible"><p><?php echo $error_msg; ?></p></div>
+				<div id="message" class="<?php echo esc_attr($class); ?> notice is-dismissible"><p><?php echo esc_html($error_msg); ?></p></div>
 			<?php } ?>
 			<form action="admin.php?page=wpdevart-extras" method="post" id="extras_form">
 			<?php wpdevart_bc_Library::items_nav($items_nav['limit'],$items_nav['total'],'extras_form'); ?>
@@ -50,17 +50,17 @@ class wpdevart_bc_ViewExtras {
 					<?php
 						foreach ( $rows as $row ) { ?>
 							<tr>
-								<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo $row->id; ?>"></td>
-								<td><?php echo $row->id; ?></td>
-								<td><a href="<?php echo add_query_arg(array( 'page' => 'wpdevart-extras', 'task' => 'edit', 'id' => $row->id ), admin_url('admin.php')); ?>"><?php echo $row->title; ?></a></td>
+								<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo esc_attr($row->id); ?>"></td>
+								<td><?php echo esc_html($row->id); ?></td>
+								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-extras', 'task' => 'edit', 'id' => esc_attr($row->id) ), admin_url('admin.php'))); ?>"><?php echo esc_html($row->title); ?></a></td>
 								<?php if($role == "administrator"){
                                      $user = $row->user_id;
 									 $user_info = get_userdata( $user ); ?>
-									<td><a href="<?php echo get_edit_user_link( $user ) ?>"><?php echo ($user_info)? $user_info->user_login : ""; ?></a></td>
+									<td><a href="<?php echo esc_url(get_edit_user_link( $user )); ?>"><?php echo ($user_info)? esc_html($user_info->user_login) : ""; ?></a></td>
 								<?php } ?>	
-								<td><a href="<?php echo add_query_arg(array( 'page' => 'wpdevart-extras', 'task' => 'duplicate', 'id' => $row->id,'_wpdevart_bc_nonce' => wp_create_nonce( 'duplicate_item' ) ), admin_url('admin.php')); ?>"><?php _e('Duplicate','booking-calendar'); ?></a></td>
-								<td><a href="<?php echo add_query_arg(array( 'page' => 'wpdevart-extras', 'task' => 'edit', 'id' => $row->id ), admin_url('admin.php')); ?>"><?php _e('Edit','booking-calendar'); ?></a></td>
-								<td><a href="" onclick="wpdevart_set_value('task','delete'); wpdevart_set_value('cur_id','<?php echo $row->id; ?>'); wpdevart_form_submit(event, 'extras_form')" ><?php _e('Delete','booking-calendar'); ?></a></td>
+								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-extras', 'task' => 'duplicate', 'id' => esc_attr($row->id),'_wpdevart_bc_nonce' => wp_create_nonce( 'duplicate_item' ) ), admin_url('admin.php'))); ?>"><?php _e('Duplicate','booking-calendar'); ?></a></td>
+								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-extras', 'task' => 'edit', 'id' => esc_attr($row->id) ), admin_url('admin.php'))); ?>"><?php _e('Edit','booking-calendar'); ?></a></td>
+								<td><a href="" onclick="wpdevart_set_value('task','delete'); wpdevart_set_value('cur_id','<?php echo esc_attr($row->id); ?>'); wpdevart_form_submit(event, 'extras_form')" ><?php _e('Delete','booking-calendar'); ?></a></td>
 							<tr>
 					<?php	}
 					?>
@@ -184,7 +184,7 @@ class wpdevart_bc_ViewExtras {
 					<input type="submit" value="<?php _e('Save','booking-calendar'); ?>" class="action-link wpda-input" name="save">
 					<input type="submit" value="<?php _e('Apply','booking-calendar'); ?>" class="action-link wpda-input" name="apply">
 					<div id="add_field_container">
-						<div id="add_extra_field" class="action-link" data-max="<?php echo $max_id; ?>"><?php _e('Add extra field','booking-calendar'); ?></div>
+						<div id="add_extra_field" class="action-link" data-max="<?php echo esc_attr($max_id); ?>"><?php _e('Add extra field','booking-calendar'); ?></div>
 					</div>
 				</div>
 				<?php
@@ -202,7 +202,7 @@ class wpdevart_bc_ViewExtras {
 						</div>	
 					</div>	
 				<input type="hidden" name="task" value="save">
-				<input type="hidden" name="id" value="<?php echo $id; ?>">
+				<input type="hidden" name="id" value="<?php echo esc_attr($id); ?>">
 				<?php wp_nonce_field( 'save_item', '_wpdevart_bc_nonce' ); ?>
 			</form>
 		</div>

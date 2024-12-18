@@ -41,7 +41,7 @@ class wpdevart_bc_ViewReservations {
 			$class = "with_paymants";
 		}
 		?>
-		<div id="wpdevart_reservations_container" class="wpdevart-list-container list-view <?php echo $class; ?>">
+		<div id="wpdevart_reservations_container" class="wpdevart-list-container list-view <?php echo esc_attr($class); ?>">
 			<form action="admin.php?page=wpdevart-reservations" method="get" id="reservations_form_cal">
 				<input type="hidden" name="page" value="wpdevart-reservations">
 				<div id="reservation_header" class="div-for-clear">
@@ -52,16 +52,16 @@ class wpdevart_bc_ViewReservations {
 					<select name="calendar_id" onchange="this.form.submit()">
 						<option value='0'><?php _e('Select Calendar','booking-calendar'); ?></option>
 						<?php foreach($calendar_rows as $calendar_row) {
-							echo "<option value='".$calendar_row["id"]."' ".selected($calendar_id, $calendar_row["id"], false).">".$calendar_row["title"]."</option>";
+							echo "<option value='".esc_attr($calendar_row["id"])."' ".selected($calendar_id, $calendar_row["id"], false).">".esc_html($calendar_row["title"])."</option>";
 						} ?>
 					</select>
 					<span id="view_list"><span class="reservation-item-info"><?php _e('Reservation List View','booking-calendar'); ?></span></span>
 					<?php if (WPDEVART_PRO == "free") : ?>
 						<span id="view_calendar" class="pro-field"><span class="reservation-item-info"><?php _e('Reservation Month View','booking-calendar'); ?><span class="pro_feature">(Pro Feature!)</span></span></span>
 					<?php else : ?>
-						<a id="view_calendar" href="<?php echo add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => $calendar_id, 'task' => 'display_month_reservations' ), admin_url('admin.php')); ?>"><span class="reservation-item-info"><?php _e('Reservation Month View','booking-calendar'); ?></span></a>
+						<a id="view_calendar" href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => esc_attr($calendar_id), 'task' => 'display_month_reservations' ), admin_url('admin.php'))); ?>"><span class="reservation-item-info"><?php _e('Reservation Month View','booking-calendar'); ?></span></a>
 					<?php endif; ?>
-					<a id="add_reservation" href="<?php echo add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => $calendar_id,'task' => 'add' ), admin_url('admin.php')); ?>" class="add-reservation"><span class="plus">+</span><span class="reservation-item-info"><?php _e('Add Reservation','booking-calendar'); ?></span></a>
+					<a id="add_reservation" href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => esc_attr($calendar_id),'task' => 'add' ), admin_url('admin.php'))); ?>" class="add-reservation"><span class="plus">+</span><span class="reservation-item-info"><?php _e('Add Reservation','booking-calendar'); ?></span></a>
 				</div>
 			</form>
 			<form action="admin.php?page=wpdevart-reservations" method="post" id="reservations_form">
@@ -85,14 +85,14 @@ class wpdevart_bc_ViewReservations {
 									echo '<div class="new_reservation_info"><span class="form_info header_info"><span class="form_label">Calendar name</span> <span class="form_value">'.__("New reservations",'booking-calendar').'</span></span>';
 									foreach($new_res as $res){
 										if(is_array($res))
-											echo '<span class="form_info"><span class="form_label">'.$res["title"].'</span> <span class="form_value"><span>'.$res["countRes"].'</span></span></span>';
+											echo '<span class="form_info"><span class="form_label">'.esc_html($res["title"]).'</span> <span class="form_value"><span>'.esc_html($res["countRes"]).'</span></span></span>';
 									}
 									echo '</div>';
 								} else{
 									echo '<div class="new_reservation_info">';
 									foreach($new_res as $res){
 										if(is_array($res))
-											echo '<span class="form_info"><span class="form_label">'.__("New reservations",'booking-calendar').'</span> <span class="form_value"><span>'.$res["countRes"].'</span></span></span>';
+											echo '<span class="form_info"><span class="form_label">'.__("New reservations",'booking-calendar').'</span> <span class="form_value"><span>'.esc_html($res["countRes"]).'</span></span></span>';
 									}
 									echo '</div>';
 								}
@@ -163,8 +163,8 @@ class wpdevart_bc_ViewReservations {
 				<tr>
 					<thead>
 						<th class="check-column"><input type="checkbox" name="check_all" onclick="check_all_checkboxes(this,'check_for_action');"></th>
-						<th class="small-column <?php echo (($res_order_by == 'id')? $res_order_class : ""); ?>"><a onclick="wpdevart_set_value('order_by', 'id'); wpdevart_set_value('asc_desc', '<?php echo (($res_order_by == 'id' && $asc_desc == 'asc') ? 'desc' : 'asc'); ?>');wpdevart_form_submit(event, 'reservations_form')" href=""><span><?php _e('ID','booking-calendar'); ?></span><span class="sorting-indicator"></span></a></th>
-						<th class="average-column <?php echo (($res_order_by == 'status')? $res_order_class : ""); ?>"><a onclick="wpdevart_set_value('order_by', 'status'); wpdevart_set_value('asc_desc', '<?php echo (($res_order_by == 'status' && $asc_desc == 'asc') ? 'desc' : 'asc'); ?>');wpdevart_form_submit(event, 'reservations_form')" href=""><span><?php _e('Status','booking-calendar'); ?></span><span class="sorting-indicator"></span></a></th>
+						<th class="small-column <?php echo (($res_order_by == 'id')? esc_attr($res_order_class) : ""); ?>"><a onclick="wpdevart_set_value('order_by', 'id'); wpdevart_set_value('asc_desc', '<?php echo (($res_order_by == 'id' && $asc_desc == 'asc') ? 'desc' : 'asc'); ?>');wpdevart_form_submit(event, 'reservations_form')" href=""><span><?php _e('ID','booking-calendar'); ?></span><span class="sorting-indicator"></span></a></th>
+						<th class="average-column <?php echo (($res_order_by == 'status')? esc_attr($res_order_class) : ""); ?>"><a onclick="wpdevart_set_value('order_by', 'status'); wpdevart_set_value('asc_desc', '<?php echo (($res_order_by == 'status' && $asc_desc == 'asc') ? 'desc' : 'asc'); ?>');wpdevart_form_submit(event, 'reservations_form')" href=""><span><?php _e('Status','booking-calendar'); ?></span><span class="sorting-indicator"></span></a></th>
 						<th class="res_info"><?php _e('Reservation information','booking-calendar'); ?></th>
 						<?php if(WPDEVART_PRO == "extended" && $class != "") : ?>
 							<th class="pay_info"><?php _e('Payment information','booking-calendar'); ?></th>
@@ -242,17 +242,17 @@ class wpdevart_bc_ViewReservations {
 						?>
 						
 						<tr id="id_<?php echo $row->id; ?>">
-							<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo $row->id; ?>"></td>
+							<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo esc_attr($row->id); ?>"></td>
 							<td><?php echo $row->id; ?></td>
-							<td><span class="reserv_status reserv_status_<?php echo $row->status; ?>"><?php echo $status; ?><span></td>
+							<td><span class="reserv_status reserv_status_<?php echo esc_attr($row->status); ?>"><?php echo esc_html($status); ?><span></td>
 							<td>
 							<div class="reserv-info div-for-clear">
 								<div class='reserv-info-container'>
 									<h5  class="reserv-info-open-title"><?php _e('Details','booking-calendar'); ?><span class="reserv-info-open"><i class="fa fa-chevron-down" aria-hidden="true"></i></span></h5>
-									<span class='form_info'><span class='form_label'><?php _e('Item Count','booking-calendar'); ?></span> <span class='form_value'><?php echo $row->count_item; ?></span></span>
+									<span class='form_info'><span class='form_label'><?php _e('Item Count','booking-calendar'); ?></span> <span class='form_value'><?php echo esc_html($row->count_item); ?></span></span>
 									<?php if(!isset($theme_options['hide_price'])) { ?>
-									<span class='form_info'><span class='form_label'><?php _e('Price','booking-calendar'); ?></span> <span class='form_value'><?php echo ($cur_pos == "before" ? $row->currency : '') . $row->price . (($cur_pos == "after") ? $row->currency : ''); ?></span></span>
-									<span class='form_info'><span class='form_label'><?php _e('Total Price','booking-calendar'); ?></span> <span class='form_value'><?php echo $sale_percent_html . ($cur_pos == "before" ? $row->currency : '') . $row->total_price . ($cur_pos == "after" ? $row->currency : ''); ?></span></span>
+									<span class='form_info'><span class='form_label'><?php _e('Price','booking-calendar'); ?></span> <span class='form_value'><?php echo ($cur_pos == "before" ? esc_html($row->currency) : '') . esc_html($row->price) . (($cur_pos == "after") ? esc_html($row->currency) : ''); ?></span></span>
+									<span class='form_info'><span class='form_label'><?php _e('Total Price','booking-calendar'); ?></span> <span class='form_value'><?php echo esc_html($sale_percent_html) . ($cur_pos == "before" ? esc_html($row->currency) : '') . esc_html($row->total_price) . ($cur_pos == "after" ? esc_html($row->currency) : ''); ?></span></span>
 									<?php } ?>
 								</div>
 								
@@ -271,7 +271,7 @@ class wpdevart_bc_ViewReservations {
 												$start = 1;
 											} 
 											if($start == 1 && (!($row->end_hour == "" && $count == 1))) { ?>
-												<span class='form_info'><span class='form_label'><?php echo $key; ?></span> <span class='form_value'><?php echo ($cur_pos == "before" ? $row->currency : '').(isset($hour["price"]) ? $hour["price"] : "").($cur_pos == "after" ? $row->currency : ''); ?><span class="hour-info"><?php echo (isset($hour["info_users"])) ? $hour["info_users"] : ""; ?></span></span></span>
+												<span class='form_info'><span class='form_label'><?php echo esc_html($key); ?></span> <span class='form_value'><?php echo ($cur_pos == "before" ? esc_html($row->currency) : '').(isset($hour["price"]) ? esc_html($hour["price"]) : "").($cur_pos == "after" ? esc_html($row->currency) : ''); ?><span class="hour-info"><?php echo (isset($hour["info_users"])) ? esc_html($hour["info_users"]) : ""; ?></span></span></span>
 											<?php $count += 1;
 											}
 											if($key == $row->end_hour){ 
@@ -288,7 +288,7 @@ class wpdevart_bc_ViewReservations {
 									$reserv_info .= "<h5>" .__("Contact Information",'booking-calendar')."</h5>";
 									foreach($form_data as $form_fild_data) {
 										if($form_fild_data['type'] == 'countries' && trim($form_fild_data['value']) != "") {
-											$reserv_info .= "<span class='form_info'><span class='form_label'>". wpdevart_bc_Library::translated_text($form_fild_data["label"]) ."</span> <span class='form_value'>". $countries[$form_fild_data["value"]] ."</span></span>";
+											$reserv_info .= "<span class='form_info'><span class='form_label'>". esc_html(wpdevart_bc_Library::translated_text($form_fild_data["label"])) ."</span> <span class='form_value'>". esc_html($countries[$form_fild_data["value"]]) ."</span></span>";
 										}else {
 											$value = $form_fild_data["value"];
 											if(strpos($form_fild_data["value"], "|wpdev|") !== false){
@@ -297,7 +297,7 @@ class wpdevart_bc_ViewReservations {
 											}
 											if($form_fild_data["type"] == "upload" && trim($value) != "")
 												$value = "<a href='" . $value . "' target='_blank'>" . __("File", 'booking-calendar') . "</a>";
-											$reserv_info .= "<span class='form_info'><span class='form_label'>". wpdevart_bc_Library::translated_text($form_fild_data["label"]) ."</span> <span class='form_value'>". $value ."</span></span>";
+											$reserv_info .= "<span class='form_info'><span class='form_label'>". esc_html(wpdevart_bc_Library::translated_text($form_fild_data["label"])) ."</span> <span class='form_value'>". esc_html($value) ."</span></span>";
 										}
 									}
 									$reserv_info .= "</div>";
@@ -307,19 +307,19 @@ class wpdevart_bc_ViewReservations {
 									$reserv_info .= "<div class='reserv-info-container'>";
 									$reserv_info .= "<h5>" .__("Extra Information",'booking-calendar')."</h5>";
 									foreach($extras_data as $extra_data) {
-										$reserv_info .= "<h6>".wpdevart_bc_Library::translated_text($extra_data["group_label"])."</h6>";
-										$reserv_info .= "<span class='form_info'><span class='form_label'>". wpdevart_bc_Library::translated_text($extra_data["label"]) ."</span>"; 
+										$reserv_info .= "<h6>".esc_html(wpdevart_bc_Library::translated_text($extra_data["group_label"]))."</h6>";
+										$reserv_info .= "<span class='form_info'><span class='form_label'>". esc_html(wpdevart_bc_Library::translated_text($extra_data["label"])) ."</span>"; 
 										$reserv_info .= "<span class='form_value'>";
 										if($extra_data["price_type"] == "percent") {
-											$reserv_info .= "<span class='price-percent'>".$extra_data["operation"].$extra_data["price_percent"]."%</span>";
-											$reserv_info .= "<span class='price'>".$extra_data["operation"] . (($cur_pos == "before" ? $row->currency : '') . (isset($extra_data["price"]) ? $extra_data["price"] : "") . (($cur_pos == "after") ? $row->currency : ''))."</span></span></span>";
+											$reserv_info .= "<span class='price-percent'>".esc_html($extra_data["operation"]).esc_html($extra_data["price_percent"])."%</span>";
+											$reserv_info .= "<span class='price'>".esc_html($extra_data["operation"]) . (($cur_pos == "before" ? esc_html($row->currency) : '') . (isset($extra_data["price"]) ? esc_html($extra_data["price"]) : "") . (($cur_pos == "after") ? esc_html($row->currency) : ''))."</span></span></span>";
 										} else {
-											$reserv_info .= "<span class='price'>".$extra_data["operation"] .(($cur_pos == "before" ? $row->currency : '') . $extra_data["price"] . ($cur_pos == "after" ? $row->currency : ''))."</span></span></span>";
+											$reserv_info .= "<span class='price'>".esc_html($extra_data["operation"]) .(($cur_pos == "before" ? esc_html($row->currency) : '') . esc_html($extra_data["price"]) . ($cur_pos == "after" ? esc_html($row->currency) : ''))."</span></span></span>";
 										}
 										
 									}
 									$reserv_info .= "<h6>" .__("Price change",'booking-calendar')."</h6>";
-									$reserv_info .= "<span class='form_info'><span class='form_label'></span><span class='form_value'>".(($row->extras_price<0)? "" : "+").($cur_pos == "before" ? $row->currency : '') . $row->extras_price . ($cur_pos == "after" ? $row->currency : '')."</span>"; 
+									$reserv_info .= "<span class='form_info'><span class='form_label'></span><span class='form_value'>".(($row->extras_price<0)? "" : "+").($cur_pos == "before" ? esc_html($row->currency) : '') . esc_html($row->extras_price) . ($cur_pos == "after" ? esc_html($row->currency) : '')."</span>"; 
 									$reserv_info .= "</div></div>";
 								}
 								/*Billing data*/
@@ -328,14 +328,14 @@ class wpdevart_bc_ViewReservations {
 									$reserv_info .= "<h5>" .__("Billing address",'booking-calendar')."</h5>";
 									foreach($billing_data as $form_fild_data) {
 										if($form_fild_data['type'] == 'countries' && trim($form_fild_data['value']) != "") {
-											$reserv_info .= "<span class='form_info'><span class='form_label'>". wpdevart_bc_Library::translated_text($form_fild_data["label"]) ."</span> <span class='form_value'>". $countries[$form_fild_data["value"]] ."</span></span>";
+											$reserv_info .= "<span class='form_info'><span class='form_label'>". esc_html(wpdevart_bc_Library::translated_text($form_fild_data["label"])) ."</span> <span class='form_value'>". esc_html($countries[$form_fild_data["value"]]) ."</span></span>";
 										}else {
 											$value = $form_fild_data["value"];
 											if(strpos($form_fild_data["value"], "|wpdev|") !== false){
 												$value = explode("|wpdev|",$form_fild_data["value"]);
 												$value = implode(", ",$value);
 											}
-											$reserv_info .= "<span class='form_info'><span class='form_label'>". wpdevart_bc_Library::translated_text($form_fild_data["label"]) ."</span> <span class='form_value'>". $value ."</span></span>";
+											$reserv_info .= "<span class='form_info'><span class='form_label'>". esc_html(wpdevart_bc_Library::translated_text($form_fild_data["label"])) ."</span> <span class='form_value'>". esc_html($value) ."</span></span>";
 										}
 									}
 									$reserv_info .= "</div>";
@@ -346,14 +346,14 @@ class wpdevart_bc_ViewReservations {
 									$reserv_info .= "<h5>" .__("Shipping address",'booking-calendar')."</h5>";
 									foreach($shipping_data as $form_fild_data) {
 										if($form_fild_data['type'] == 'countries' && trim($form_fild_data['value']) != "") {
-											$reserv_info .= "<span class='form_info'><span class='form_label'>". wpdevart_bc_Library::translated_text($form_fild_data["label"]) ."</span> <span class='form_value'>". $countries[$form_fild_data["value"]] ."</span></span>";
+											$reserv_info .= "<span class='form_info'><span class='form_label'>". esc_html(wpdevart_bc_Library::translated_text($form_fild_data["label"])) ."</span> <span class='form_value'>". esc_html($countries[$form_fild_data["value"]]) ."</span></span>";
 										}else {
 											$value = $form_fild_data["value"];
 											if(strpos($form_fild_data["value"], "|wpdev|") !== false){
 												$value = explode("|wpdev|",$form_fild_data["value"]);
 												$value = implode(", ",$value);
 											}
-											$reserv_info .= "<span class='form_info'><span class='form_label'>". wpdevart_bc_Library::translated_text($form_fild_data["label"]) ."</span> <span class='form_value'>". $value ."</span></span>";
+											$reserv_info .= "<span class='form_info'><span class='form_label'>". esc_html(wpdevart_bc_Library::translated_text($form_fild_data["label"])) ."</span> <span class='form_value'>". esc_html($value) ."</span></span>";
 										}
 									}
 									$reserv_info .= "</div>";
@@ -371,7 +371,7 @@ class wpdevart_bc_ViewReservations {
 												<span class="reserv-info-open"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
 											<?php } ?>
 											</h5>
-											<span class='form_info'><span class='form_label'><?php _e('Payment Status','booking-calendar'); ?></span> <span class='form_value'><span class="payment_status paypal"><?php echo $row->pay_status; ?></span></span></span>
+											<span class='form_info'><span class='form_label'><?php _e('Payment Status','booking-calendar'); ?></span> <span class='form_value'><span class="payment_status paypal"><?php echo esc_html($row->pay_status); ?></span></span></span>
 										</div>
 									</div>
 									<div class="reserv-info-items div-for-clear paymant_div">
@@ -385,7 +385,7 @@ class wpdevart_bc_ViewReservations {
 												$cur = "";
 												if($key == "payment_price")
 													$cur = $row->currency;
-												$pay .= "<span class='form_info'><span class='form_label'>".str_replace("_"," ", ucfirst($key)) ."</span> <span class='form_value'>".((isset($theme_options['currency_pos']) && $theme_options['currency_pos'] == "before" && $cur != "") ? $cur : ""). $value .(((isset($theme_options['currency_pos']) && $theme_options['currency_pos'] == "after") || !isset($theme_options['currency_pos'])) ? $cur : '').($key == "tax" ? "%" : "")."</span></span>";
+												$pay .= "<span class='form_info'><span class='form_label'>".esc_html(str_replace("_"," ", ucfirst($key))) ."</span> <span class='form_value'>".((isset($theme_options['currency_pos']) && $theme_options['currency_pos'] == "before" && $cur != "") ? esc_html($cur) : ""). esc_html($value) .(((isset($theme_options['currency_pos']) && $theme_options['currency_pos'] == "after") || !isset($theme_options['currency_pos'])) ? esc_html($cur) : '').($key == "tax" ? "%" : "")."</span></span>";
 											}
 											$pay .= "</div>";
 										}
@@ -397,7 +397,7 @@ class wpdevart_bc_ViewReservations {
 									<div class="reserv-info div-for-clear">
 										<div class='reserv-info-container'>
 											<h5  class="reserv-info-open-title"><?php _e('Payment method - Pay in cash','booking-calendar'); ?></h5>
-											<span class='form_info'><span class='form_label'><?php _e('Payment Status','booking-calendar'); ?></span> <span class='form_value'><span class="payment_status pay_in_cash"><?php echo $row->payment_status; ?></span></span></span>
+											<span class='form_info'><span class='form_label'><?php _e('Payment Status','booking-calendar'); ?></span> <span class='form_value'><span class="payment_status pay_in_cash"><?php echo esc_html($row->payment_status); ?></span></span></span>
 										</div>
 									</div>
 								  <?php endif; ?>
@@ -415,7 +415,7 @@ class wpdevart_bc_ViewReservations {
 								} 
 								
 								if(isset($row->is_new) && $row->is_new == 1){ ?>
-									<a href=''  onclick="wpdevart_set_value('task','mark_read'); wpdevart_set_value('cur_id','<?php echo $row->id; ?>'); wpdevart_form_submit(event, 'reservations_form')" title="<?php _e("Mark as read","booking-calendar"); ?>"><span class='new_res'><?php _e("New","booking-calendar"); ?></span>
+									<a href=''  onclick="wpdevart_set_value('task','mark_read'); wpdevart_set_value('cur_id','<?php echo esc_attr($row->id); ?>'); wpdevart_form_submit(event, 'reservations_form')" title="<?php _e("Mark as read","booking-calendar"); ?>"><span class='new_res'><?php _e("New","booking-calendar"); ?></span>
 								<?php } ?>
 						   </td>
 						</tr>   
@@ -423,32 +423,32 @@ class wpdevart_bc_ViewReservations {
 							<td colspan="<?php echo (WPDEVART_PRO == "extended" && $class != "") ? "5" : "4"; ?>">
 							<span class="buttons">
 								<?php if($row->status == "pending" || $row->status == "canceled" || $row->status == "rejected") { ?>
-									<a href="" onclick="wpdevart_set_value('task','approve'); wpdevart_set_value('cur_id','<?php echo $row->id; ?>'); wpdevart_form_submit(event, 'reservations_form')"  class="action-button approve-button" ><?php _e('Approve','booking-calendar'); ?></a>
+									<a href="" onclick="wpdevart_set_value('task','approve'); wpdevart_set_value('cur_id','<?php echo esc_attr($row->id); ?>'); wpdevart_form_submit(event, 'reservations_form')"  class="action-button approve-button" ><?php _e('Approve','booking-calendar'); ?></a>
 									<?php if($row->status == "pending") { ?>
-										<a href="" onclick="wpdevart_set_value('task','reject'); wpdevart_set_value('cur_id','<?php echo $row->id; ?>'); wpdevart_form_submit(event, 'reservations_form')" class="action-button reject-button" ><?php _e('Reject','booking-calendar'); ?></a>
+										<a href="" onclick="wpdevart_set_value('task','reject'); wpdevart_set_value('cur_id','<?php echo esc_attr($row->id); ?>'); wpdevart_form_submit(event, 'reservations_form')" class="action-button reject-button" ><?php _e('Reject','booking-calendar'); ?></a>
 									<?php  } ?>
 								<?php } elseif($row->status == "approved") { ?>
-									<a href="" onclick="wpdevart_set_value('task','canceled'); wpdevart_set_value('cur_id','<?php echo $row->id; ?>'); wpdevart_form_submit(event, 'reservations_form')" class="action-button cancel-button" ><?php _e('Cancel','booking-calendar'); ?></a>
+									<a href="" onclick="wpdevart_set_value('task','canceled'); wpdevart_set_value('cur_id','<?php echo esc_attr($row->id); ?>'); wpdevart_form_submit(event, 'reservations_form')" class="action-button cancel-button" ><?php _e('Cancel','booking-calendar'); ?></a>
 								<?php  } ?>
-								<a href="" onclick="wpdevart_set_value('task','delete'); wpdevart_set_value('cur_id','<?php echo $row->id; ?>'); wpdevart_form_submit(event, 'reservations_form')"  class="action-button delete-button"><?php _e('Delete','booking-calendar'); ?></a>
+								<a href="" onclick="wpdevart_set_value('task','delete'); wpdevart_set_value('cur_id','<?php echo esc_attr($row->id); ?>'); wpdevart_form_submit(event, 'reservations_form')"  class="action-button delete-button"><?php _e('Delete','booking-calendar'); ?></a>
 							</span>
 							
 							<span class="buttons">
-								<a  <?php echo (WPDEVART_PRO == "extended" ) ? 'onclick="wpdevart_set_value(\'task\',\'edit\'); wpdevart_set_value(\'cur_id\',' . $row->id .'); wpdevart_form_submit(event, \'reservations_form\')"' : ""; ?>  class="action-button cal-edit-button wpdevart-button"><?php _e('Edit','booking-calendar'); ?>
+								<a  <?php echo (WPDEVART_PRO == "extended" ) ? 'onclick="wpdevart_set_value(\'task\',\'edit\'); wpdevart_set_value(\'cur_id\',' . esc_attr($row->id) .'); wpdevart_form_submit(event, \'reservations_form\')"' : ""; ?>  class="action-button cal-edit-button wpdevart-button"><?php _e('Edit','booking-calendar'); ?>
 								<?php if(WPDEVART_PRO != "extended" ) : ?>
 									<span>(Extended)</span>
 								<?php endif; ?>
 								</a>	
 							  <?php if(isset($row->payment_status) && $row->payment_status != "") :?>
-								<a  onclick="quick_edit(this,'<?php echo $row->id; ?>');"  class="action-button quick-edit-button wpdevart-button"><?php _e('Payment Status Edit','booking-calendar'); ?></a>
+								<a  onclick="quick_edit(this,'<?php echo esc_attr($row->id); ?>');"  class="action-button quick-edit-button wpdevart-button"><?php _e('Payment Status Edit','booking-calendar'); ?></a>
 							  <?php endif; ?>
-								<a  onclick="cancel_edit(this,'<?php echo $row->id; ?>');"  class="action-button cancel-edit-button wpdevart-button cancel_<?php echo $row->id; ?>"><?php _e('Cancel','booking-calendar'); ?></a>
-								<a  onclick="quick_update(this,'<?php echo $row->id; ?>');"  class="action-button update-edit-button wpdevart-button"><?php _e('Update','booking-calendar'); ?></a>
+								<a  onclick="cancel_edit(this,'<?php echo esc_attr($row->id); ?>');"  class="action-button cancel-edit-button wpdevart-button cancel_<?php echo esc_attr($row->id); ?>"><?php _e('Cancel','booking-calendar'); ?></a>
+								<a  onclick="quick_update(this,'<?php echo esc_attr($row->id); ?>');"  class="action-button update-edit-button wpdevart-button"><?php _e('Update','booking-calendar'); ?></a>
 								<span class="spinner"></span>
 							</span>
 							</td>
 							<td colspan="1">
-								<div class="created_date"><?php _e('Created:','booking-calendar'); ?> <?php echo date($date_format. " H:i", strtotime($row->date_created)); ?></div>
+								<div class="created_date"><?php _e('Created:','booking-calendar'); ?> <?php echo esc_html(date($date_format. " H:i", strtotime($row->date_created))); ?></div>
 							</td>
 						</tr>
 				<?php	}
@@ -483,12 +483,12 @@ class wpdevart_bc_ViewReservations {
 					<select name="calendar_id" onchange="wpdevart_set_value('task','display_month_reservations');this.form.submit()">
 						<option value='0'><?php _e('Select Calendar','booking-calendar'); ?></option>
 						<?php foreach($calendar_rows as $calendar_row) {
-							echo "<option value='".$calendar_row["id"]."' ".selected($calendar_id, $calendar_row["id"],false).">".$calendar_row["title"]."</option>";
+							echo "<option value='".esc_attr($calendar_row["id"])."' ".selected($calendar_id, $calendar_row["id"],false).">".esc_html($calendar_row["title"])."</option>";
 						} ?>
 					</select>
-					<a id="view_list" href="<?php echo add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => $calendar_id,'task' => 'display_reservations' ), admin_url('admin.php')); ?>"><span class="reservation-item-info"><?php _e('Reservation List View','booking-calendar'); ?></span></a>
+					<a id="view_list" href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => esc_attr($calendar_id),'task' => 'display_reservations' ), admin_url('admin.php'))); ?>"><span class="reservation-item-info"><?php _e('Reservation List View','booking-calendar'); ?></span></a>
 					<span id="view_calendar"><span class="reservation-item-info"><?php _e('Reservation Month View','booking-calendar'); ?></span></span>
-					<a id="add_reservation" href="<?php echo add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => $calendar_id,'task' => 'add' ), admin_url('admin.php')); ?>" class="add-reservation"><span class="plus">+</span><span class="reservation-item-info"><?php _e('Add Reservation','booking-calendar'); ?></span></a>
+					<a id="add_reservation" href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => esc_attr($calendar_id),'task' => 'add' ), admin_url('admin.php'))); ?>" class="add-reservation"><span class="plus">+</span><span class="reservation-item-info"><?php _e('Add Reservation','booking-calendar'); ?></span></a>
 				</div>
 				
 			</div>
@@ -497,7 +497,7 @@ class wpdevart_bc_ViewReservations {
 				if($calendar_id != 0) {
 					$booking_obg = new wpdevart_bc_calendar();
 					$result = $booking_obg->wpdevart_booking_calendar_res($calendar_id);			
-					echo $result;
+					echo $result; // result isn't needed to escape because this function is generating a calendar that is already escaped.
 				} ?>
 			</div>
 			<input type="hidden" name="task" id="task" value="">
@@ -522,14 +522,14 @@ class wpdevart_bc_ViewReservations {
 						<select name="calendar_id" onchange="wpdevart_set_value('task','add');this.form.submit()">
 							<option value='0'><?php _e('Select Calendar','booking-calendar'); ?></option>
 							<?php foreach($calendar_rows as $calendar_row) {
-								echo "<option value='".$calendar_row["id"]."' ".selected($calendar_id, $calendar_row["id"],false).">".$calendar_row["title"]."</option>";
+								echo "<option value='".esc_attr($calendar_row["id"])."' ".selected($calendar_id, $calendar_row["id"],false).">".esc_html($calendar_row["title"])."</option>";
 							} ?>
 						</select>
-						<a id="view_list" href="<?php echo add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => $calendar_id,'task' => 'display_reservations' ), admin_url('admin.php')); ?>"><span class="reservation-item-info"><?php _e('Reservation List View','booking-calendar'); ?></span></a>
+						<a id="view_list" href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => esc_attr($calendar_id),'task' => 'display_reservations' ), admin_url('admin.php'))); ?>"><span class="reservation-item-info"><?php _e('Reservation List View','booking-calendar'); ?></span></a>
 						<?php if (WPDEVART_PRO == "free") : ?>
 							<span id="view_calendar" class="pro-field"><span class="reservation-item-info"><?php _e('Reservation Month View','booking-calendar'); ?><span class="pro_feature">(Pro Feature!)</span></span></span>
 						<?php else : ?>
-							<a id="view_calendar" href="<?php echo add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => $calendar_id,'task' => 'display_month_reservations' ), admin_url('admin.php')); ?>"><span class="reservation-item-info"><?php _e('Reservation Month View','booking-calendar'); ?></span></a>
+							<a id="view_calendar" href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-reservations', 'calendar_id' => esc_attr($calendar_id),'task' => 'display_month_reservations' ), admin_url('admin.php'))); ?>"><span class="reservation-item-info"><?php _e('Reservation Month View','booking-calendar'); ?></span></a>
 						<?php endif; ?>
 						<span id="add_reservation" class="add-reservation"><span class="plus">+</span><span class="reservation-item-info"><?php _e('Add Reservation','booking-calendar'); ?></span></span>
 					</div>
@@ -542,7 +542,7 @@ class wpdevart_bc_ViewReservations {
 				if($calendar_id != 0) {
 					$booking_obg = new wpdevart_bc_calendar();
 					$result = $booking_obg->wpdevart_booking_calendar($calendar_id);
-					echo $result;
+					echo $result; // result isn't needed to escape because this function is generating a calendar that is already escaped.
 				} ?>
 			</div>
 				
@@ -562,7 +562,7 @@ class wpdevart_bc_ViewReservations {
 				if($calendar_id != 0) {
 					$booking_obg = new wpdevart_bc_calendar();
 					$result = $booking_obg->wpdevart_booking_calendar($calendar_id, $id);
-					echo $result;
+					echo $result; // result isn't needed to escape because this function is generating a calendar that is already escaped.
 				} ?>
 			</div>
 		</div>
