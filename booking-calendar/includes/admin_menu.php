@@ -13,7 +13,6 @@ class wpdevart_bc_admin_menu{
     /*############  Create menu function ################*/
 	
 	public function create_menu(){
-		$support_url = 9;
 		if ( get_option( 'wpdevart_permissions' ) !== false ) {
 			$permissions = get_option( 'wpdevart_permissions' );
 			$permissions = json_decode($permissions,true);
@@ -43,10 +42,10 @@ class wpdevart_bc_admin_menu{
 		$page_global = add_submenu_page( 'wpdevart-calendars', 'Global Settings', 'Global Settings', $permissions['global_settings_page'], 'wpdevart-global-settings', array($this, 'admin_functions'));
 		$page_manage = add_submenu_page( 'wpdevart-calendars', 'User Permissions', 'User Permissions', 'manage_options', 'wpdevart-user-permissions', array($this, 'admin_functions'));
 		$page_uninstall = add_submenu_page( 'wpdevart-calendars', 'Uninstall'  , 'Uninstall', 'manage_options', 'wpdevart-booking-uninstall', array($this, 'uninstall_booking'));
-		$page_featured = add_submenu_page( 'wpdevart-calendars', 'Featured plugins', 'Featured plugins', 'manage_options', 'wpdevart-add-booking', array($this, 'featured_plugins'));
-		if (WPDEVART_PRO !== 'free') {
-			$page_hire_expert = add_submenu_page( 'wpdevart-calendars', 'Hire an Expert', '<span style="color:#00ff66" >Hire an Expert</span>', 'manage_options', 'wpdevart-booking-hire-expert', array($this, 'hire_expert'));
-		}
+		$page_featured = add_submenu_page( 'wpdevart-calendars', 'Featured plugins', 'Featured plugins', 'manage_options', 'wpdevart-booking-featured-plugins', array($this, 'featured_plugins'));
+		$featured_theme_page = add_submenu_page( 'wpdevart-calendars', 'Featured themes', 'Featured themes', 'manage_options', 'wpdevart-booking-featured-themes', array($this, 'featured_themes'));
+		$page_hire_expert = add_submenu_page( 'wpdevart-calendars', 'Hire an Expert', '<span style="color:#00ff66" >Hire an Expert</span>', 'manage_options', 'wpdevart-booking-hire-expert', array($this, 'hire_expert'));
+		
 		add_action('admin_print_styles-' .$main_page, array($this,'calendar_requeried_scripts'));
 		add_action('admin_print_styles-' .$page_bookings, array($this,'calendar_requeried_scripts'));	
 		add_action('admin_print_styles-' .$page_reservation, array($this,'menu_requeried_scripts'));	
@@ -56,14 +55,13 @@ class wpdevart_bc_admin_menu{
 		add_action('admin_print_styles-' .$page_uninstall, array($this,'menu_requeried_scripts'));
 		add_action('admin_print_styles-' .$page_forms, array($this,'menu_requeried_scripts'));
 		add_action('admin_print_styles-' .$page_extra, array($this,'menu_requeried_scripts'));
-		add_action('admin_print_styles-' .$page_featured, array($this,'menu_requeried_scripts'));
-		if (WPDEVART_PRO !== 'free') {
-			add_action('admin_print_styles-' .$page_hire_expert, array($this,'hire_expert_scripts'));
-			$support_url = 10;
-		}
-		if(isset($submenu['wpdevart-calendars'])){
+		add_action('admin_print_styles-' .$page_featured, array($this,'featured_plugins_js_css'));
+		add_action('admin_print_styles-' .$featured_theme_page, array($this,'featured_themes_js_css'));		
+		add_action('admin_print_styles-' .$page_hire_expert, array($this,'hire_expert_scripts'));		
+		if(isset($submenu['wpdevart-calendars'])){			
 			add_submenu_page( 'wpdevart-calendars', "Support or Any Ideas?", "<span style='color:#00ff66' >Support or Any Ideas?</span>", 'manage_options',"wpdevart_booking_calendar_any_idea",array($this, 'any_ideas'),155);
-			$submenu['wpdevart-calendars'][$support_url][2]=wpdevart_booking_support_url;
+			$count_pages = count($submenu['wpdevart-calendars'])-1;
+			$submenu['wpdevart-calendars'][$count_pages][2]=wpdevart_booking_support_url;
 		}
 	}
 	public function any_ideas(){
@@ -72,8 +70,15 @@ class wpdevart_bc_admin_menu{
 
     /*############  Menu Requeried Scripts function ################*/
 	public function hire_expert_scripts(){
-		wp_enqueue_style(WPDEVART_PLUGIN_PREFIX.'-admin-style', WPDEVART_URL.'css/hire_expert.css',array(),WPDEVART_VERSION);
+		wp_enqueue_style(WPDEVART_PLUGIN_PREFIX.'-hire-expert-admin-style', WPDEVART_URL.'css/hire_expert.css',array(),WPDEVART_VERSION);
 	}
+	public function featured_plugins_js_css(){
+		wp_enqueue_style(WPDEVART_PLUGIN_PREFIX.'-featured-plugins-admin-style', WPDEVART_URL.'css/featured_plugins_css.css',array(),WPDEVART_VERSION);
+	}
+	public function featured_themes_js_css(){
+		wp_enqueue_style(WPDEVART_PLUGIN_PREFIX.'-featured-themes-admin-style', WPDEVART_URL.'css/featured_themes_css.css',array(),WPDEVART_VERSION);
+	}
+
 	public function menu_requeried_scripts(){
 		wp_enqueue_script('wp-color-picker');		
 		wp_enqueue_style( 'wp-color-picker' );
@@ -144,71 +149,69 @@ class wpdevart_bc_admin_menu{
 			$controller->perform();
 		}	
 	}
-	
-	public function hire_expert(){
-		$plugins_array=array(
-			'custom_site_dev'=>array(
-				'image_url'		=>	WPDEVART_URL.'css/images/hire_expert/1.png',
-				'title'			=>	'Custom WordPress Development',
-				'description'	=>	'Hire a WordPress expert and make any custom development for your WordPress website.'
-			),
-			'custom_plug_dev'=>array(
-				'image_url'		=>	WPDEVART_URL.'css/images/hire_expert/2.png',
-				'title'			=>	'WordPress Plugin Development',
-				'description'	=>	'Our developers can create any WordPress plugin from zero. Also, they can customize any plugin and add any functionality.'
-			),
-			'custom_theme_dev'=>array(
-				'image_url'		=>	WPDEVART_URL.'css/images/hire_expert/3.png',
-				'title'			=>	'WordPress Theme Development',
-				'description'	=>	'If you need an unique theme or any customizations for a ready theme, then our developers are ready.'
-			),
-			'custom_theme_inst'=>array(
-				'image_url'		=>	WPDEVART_URL.'css/images/hire_expert/4.png',
-				'title'			=>	'WordPress Theme Installation and Customization',
-				'description'	=>	'If you need a theme installation and configuration, then just let us know, our experts configure it.'
-			),
-			'gen_wp_speed'=>array(
-				'image_url'		=>	WPDEVART_URL.'css/images/hire_expert/5.png',
-				'title'			=>	'General WordPress Support',
-				'description'	=>	'Our developers can provide general support. If you have any problem with your website, then our experts are ready to help.'
-			),
-			'speed_op'=>array(
-				'image_url'		=>	WPDEVART_URL.'css/images/hire_expert/6.png',
-				'title'			=>	'WordPress Speed Optimization',
-				'description'	=>	'Hire an expert from WpDevArt and let him take care of your website speed optimization.'
-			),
-			'mig_serv'=>array(
-				'image_url'		=>	WPDEVART_URL.'css/images/hire_expert/7.png',
-				'title'			=>	'WordPress Migration Services',
-				'description'	=>	'Our developers can migrate websites from any platform to WordPress.'
-			),
-			'page_seo'=>array(
-				'image_url'		=>	WPDEVART_URL.'css/images/hire_expert/8.png',
-				'title'			=>	'WordPress On-Page SEO',
-				'description'	=>	'On-page SEO is an important part of any website. Hire an expert and they will organize the on-page SEO for your website.'
-			)
-		);
-		$content='';
-		
-		$content.='<h1 class="wpdev_hire_exp_h1"> Hire an Expert from WpDevArt </h1>';
-		$content.='<div class="hire_expert_main">';		
-		foreach($plugins_array as $key=>$plugin) {
-			$content.='<div class="wpdevart_hire_main"><a target="_blank" class="wpdev_hire_buklet" href="https://wpdevart.com/hire-wordpress-developer-dedicated-experts-are-ready-to-help/">';
-			$content.='<div class="wpdevart_hire_image"><img src="'.$plugin["image_url"].'"></div>';
-			$content.='<div class="wpdevart_hire_information">';
-			$content.='<div class="wpdevart_hire_title">'.$plugin["title"].'</div>';			
-			$content.='<p class="wpdevart_hire_description">'.$plugin["description"].'</p>';
-			$content.='</div></a></div>';		
-		} 
-		$content.='<div><a target="_blank" class="wpdev_hire_button" href="https://wpdevart.com/hire-wordpress-developer-dedicated-experts-are-ready-to-help/">Hire an Expert</a></div>';
-		$content.='</div>';
-		
-		echo $content;
-	}
-	
-	/*################################## FEATURED PLUGINS #########################################*/
-	public function featured_plugins(){
-		$plugins_array=array(
+
+
+	public function hire_expert() {
+        $plugins_array = array(
+            'custom_site_dev' => array(
+                'image_url' => WPDEVART_URL.'css/images/hire_expert/1.png',
+                'title' => 'Custom WordPress Development',
+                'description' => 'Hire a WordPress expert and make any custom development for your WordPress website.',
+            ),
+            'custom_plug_dev' => array(
+                'image_url' => WPDEVART_URL.'css/images/hire_expert/2.png',
+                'title' => 'WordPress Plugin Development',
+                'description' => 'Our developers can create any WordPress plugin from zero. Also, they can customize any plugin and add any functionality.',
+            ),
+            'custom_theme_dev' => array(
+                'image_url' => WPDEVART_URL.'css/images/hire_expert/3.png',
+                'title' => 'WordPress Theme Development',
+                'description' => 'If you need an unique theme or any customizations for a ready theme, then our developers are ready.',
+            ),
+            'custom_theme_inst' => array(
+                'image_url' => WPDEVART_URL.'css/images/hire_expert/4.png',
+                'title' => 'WordPress Theme Installation and Customization',
+                'description' => 'If you need a theme installation and configuration, then just let us know, our experts configure it.',
+            ),
+            'gen_wp_speed' => array(
+                'image_url' => WPDEVART_URL.'css/images/hire_expert/5.png',
+                'title' => 'General WordPress Support',
+                'description' => 'Our developers can provide general support. If you have any problem with your website, then our experts are ready to help.',
+            ),
+            'speed_op' => array(
+                'image_url' => WPDEVART_URL.'css/images/hire_expert/6.png',
+                'title' => 'WordPress Speed Optimization',
+                'description' => 'Hire an expert from WpDevArt and let him take care of your website speed optimization.',
+            ),
+            'mig_serv' => array(
+                'image_url' => WPDEVART_URL.'css/images/hire_expert/7.png',
+                'title' => 'WordPress Migration Services',
+                'description' => 'Our developers can migrate websites from any platform to WordPress.',
+            ),
+            'page_seo' => array(
+                'image_url' => WPDEVART_URL.'css/images/hire_expert/8.png',
+                'title' => 'WordPress SEO',
+                'description' => 'SEO is an important part of any website. Hire an expert and he will organize the SEO of your website.',
+            ),
+        );
+        $content = '';
+        $content .= '<h1 class="wpda_hire_exp_h1"> Hire an Expert from WpDevArt </h1>';
+        $content .= '<div class="hire_expert_main">';
+        foreach ($plugins_array as $key => $plugin) {
+            $content .= '<div class="wpdevart_hire_main"><a target="_blank" class="wpda_hire_buklet" href="https://wpdevart.com/hire-a-wordpress-developer-online-submit-form/">';
+            $content .= '<div class="wpdevart_hire_image"><img src="' . $plugin["image_url"] . '"></div>';
+            $content .= '<div class="wpdevart_hire_information">';
+            $content .= '<div class="wpdevart_hire_title">' . $plugin["title"] . '</div>';
+            $content .= '<p class="wpdevart_hire_description">' . $plugin["description"] . '</p>';
+            $content .= '</div></a></div>';
+        }
+        $content .= '<div><a target="_blank" class="wpda_hire_button" href="https://wpdevart.com/hire-a-wordpress-developer-online-submit-form/">Hire an Expert</a></div>';
+        $content .= '</div>';
+        echo $content;
+    }
+
+    public function featured_plugins() {
+        $plugins_array=array(
 			'pricing_table'=>array(
 						'image_url'		=>	WPDEVART_URL.'css/images/featured_plugins/pricing_table.png',
 						'site_url'		=>	'https://wpdevart.com/wordpress-pricing-table-plugin/',
@@ -224,7 +227,7 @@ class wpdevart_bc_admin_menu{
 			'countdown_extendet'=>array(
 						'image_url'		=>	WPDEVART_URL.'css/images/featured_plugins/countdown_extendet.png',
 						'site_url'		=>	'https://wordpress.org/plugins/countdown-wpdevart-extended/',
-						'title'			=>	'Countdown Timer – Extended version, Popup Countdown',
+						'title'			=>	'Countdown Timer ï¿½ Extended version, Popup Countdown',
 						'description'	=>	'The most functional and beautiful Countdown Timer plugin for WordPress.'
 						),
 			'Contact forms'=>array(
@@ -295,20 +298,155 @@ class wpdevart_bc_admin_menu{
 						),						
 			
 		);
-		?>
-		<h1 style="text-align: center;font-size: 50px;font-weight: 700;color: #2b2350;margin: 20px auto 25px;line-height: 1.2;">Featured Plugins</h1>
-		<?php foreach($plugins_array as $key=>$plugin) { ?>
-		<div class="featured_plugin_main">
-			<div class="featured_plugin_image"><a target="_blank" href="<?php echo $plugin['site_url'] ?>"><img src="<?php echo $plugin['image_url'] ?>"></a></div>
-			<div class="featured_plugin_information">
-				<div class="featured_plugin_title"><h4><a target="_blank" href="<?php echo $plugin['site_url'] ?>"><?php echo $plugin['title'] ?></a></h4></div>
-				<p class="featured_plugin_description"><?php echo $plugin['description'] ?></p>
-				<a target="_blank" href="<?php echo $plugin['site_url'] ?>" class="blue_button">Learn More</a>
-			</div>
-			<div style="clear:both"></div>                
-		</div>
-		<?php } 
-	}
+        $html = '';
+        $html .= '<h1 class="wpda_featured_plugins_title">Featured Plugins</h1>';
+        foreach ($plugins_array as $plugin) {
+            $html .= '<div class="featured_plugin_main">';
+            $html .= '<div class="featured_plugin_image"><a target="_blank" href="' . $plugin['site_url'] . '"><img src="' . $plugin['image_url'] . '"></a></div>';
+            $html .= '<div class="featured_plugin_information">';
+            $html .= '<div class="featured_plugin_title">';
+            $html .= '<h4><a target="_blank" href="' . $plugin['site_url'] . '">' . $plugin['title'] . '</a></h4>';
+            $html .= '</div>';
+            $html .= '<p class="featured_plugin_description">' . $plugin['description'] . '</p>';
+            $html .= '<a target="_blank" href="' . $plugin['site_url'] . '" class="blue_button">Check The Plugin</a>';
+            $html .= '</div>';
+            $html .= '<div style="clear:both"></div>';
+            $html .= '</div>';
+        }
+        echo $html;
+    }
+
+    public function featured_themes() {
+        $themes_array = array(
+            'tistore' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/tistore.jpg',
+                'site_url' => 'https://wpdevart.com/tistore-best-ecommerce-theme-for-wordpress/',
+                'title' => 'TiStore',
+                'description' => 'TiStore is one of the best eCommerce WordPress themes that is fully integrated with WooCommerce.',
+            ),
+            'megastore' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/megastore.jpg',
+                'site_url' => 'https://wpdevart.com/megastore-best-woocommerce-theme-for-wordpress/',
+                'title' => 'MegaStore',
+                'description' => 'MegaStore is one of the best WooCommerce themes available for WordPress.',
+            ),
+            'jevstore' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/jevstore.jpg',
+                'site_url' => 'https://wpdevart.com/jewstore-best-wordpress-jewelry-store-theme/',
+                'title' => 'JewStore',
+                'description' => 'JewStore is a WordPress WooCommerce theme designed for jewelry stores and blogs.',
+            ),
+            'cakeshop' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/cakeshop.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-cake-shop-theme/',
+                'title' => 'Cake Shop',
+                'description' => 'WordPress Cake Shop is a multi-purpose WooCommerce-ready theme.',
+            ),
+            'flowershop' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/flowershop.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-flower-shop-theme/',
+                'title' => 'Flower Shop',
+                'description' => 'WordPress Flower Shop is a responsive and WooCommerce-ready theme developed by our team.',
+            ),
+            'coffeeshop' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/coffeeshop.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-coffee-shop-cafe-theme/',
+                'title' => 'Coffee Shop',
+                'description' => 'It is a responsive and user-friendly theme designed specifically for coffee shop or cafe websites.',
+            ),
+            'weddingplanner' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/weddingplanner.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-wedding-planner-theme/',
+                'title' => 'Wedding Planner',
+                'description' => 'Wedding Planner is a responsive WordPress theme that is fully integrated with WooCommerce.',
+            ),
+            'Amberd' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/Amberd.jpg',
+                'site_url' => 'https://wpdevart.com/amberd-wordpress-online-store-theme/',
+                'title' => 'AmBerd',
+                'description' => 'AmBerd has all the necessary features and functionality to create a beautiful WordPress website.',
+            ),
+            'bookshop' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/bookshop.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-book-shop-theme/',
+                'title' => 'Book Shop',
+                'description' => 'The Book Shop WordPress theme is a fresh and well-designed theme for creating bookstores or book blogs.',
+            ),
+            'ecommercemodernstore' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/ecommercemodernstore.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-ecommerce-modern-store-theme/',
+                'title' => 'Ecommerce Modern Store',
+                'description' => 'WordPress Ecommerce Modern Store theme is one of the best solutions if you want to create an online store.',
+            ),
+            'electrostore' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/electrostore.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-electronics-store-electro-theme/',
+                'title' => 'ElectroStore',
+                'description' => 'This is a responsive and WooCommerce-ready electronic store theme.',
+            ),
+            'jewelryshop' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/jewelryshop.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-jewelry-shop-theme/',
+                'title' => 'Jewelry Shop',
+                'description' => 'WordPress Jewelry Shop theme is designed specifically for jewelry websites, but of course, you can use this theme for other types of websites as well.',
+            ),
+            'fashionshop' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/fashionshop.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-fashion-shop-theme/',
+                'title' => 'Fashion Shop',
+                'description' => 'The Fashion Shop is one of the best responsive WordPress WooCommerce themes for creating a fashion store website.',
+            ),
+            'barbershop' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/barbershop.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-barbershop-theme/',
+                'title' => 'Barbershop',
+                'description' => 'WordPress Barbershop is another responsive and functional theme developed by our team.',
+            ),
+            'furniturestore' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/furniturestore.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-furniture-store-theme/',
+                'title' => 'Furniture Store',
+                'description' => 'This is a great option to quickly create an online store using our theme and the WooCommerce plugin. Our theme is fully integrated with WooCommerce.',
+            ),
+            'clothing' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/clothing.jpg',
+                'site_url' => 'https://wpdevart.com/tistore-best-ecommerce-theme-for-wordpress/',
+                'title' => 'Clothing',
+                'description' => 'The Clothing WordPress theme is one of the best responsive eCommerce themes available for WordPress.',
+            ),
+            'weddingphotography' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/weddingphotography.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-wedding-photography-theme/',
+                'title' => 'Wedding Photography',
+                'description' => 'WordPress Wedding Photography theme is one of the best themes specially designed for wedding photographers or photography companies.',
+            ),
+            'petshop' => array(
+                'image_url' => WPDEVART_URL.'css/images/featured_themes/petshop.jpg',
+                'site_url' => 'https://wpdevart.com/wordpress-pet-shop-theme/',
+                'title' => 'Pet Shop',
+                'description' => 'Pet Shop is a powerful and well-designed WooCommerce WordPress theme.',
+            ),
+        );
+        $html = '';
+        $html .= '<div class="wpdevart_main"><h1 class="wpda_featured_themes_title">Featured Themes</h1>';
+
+        $html .= '<div class="div-container">';
+        foreach ($themes_array as $theme) {
+            $html .= '<div class="theme" data-slug="tistore"><div class="theme-img">';                
+            $html .= ' <img src="'.$theme['image_url'].'" alt="' . $theme['title'] . '">';
+            $html .= '</div>';
+            $html .= '<div class="theme-description">' . $theme['description'] . '</div>';
+            $html .= '<div class="theme-name-container">'; 
+            $html .= '<h2 class="theme-name">' . $theme['title'] . '</h2>';
+            $html .= '<div class="theme-actions">';
+            $html .= '<a target="_blank" aria-label="Check theme" class="button button-primary load-customize" href="' . $theme['site_url'] . '">Check Theme</a>';
+            $html .= '</div></div></div>';
+            
+            
+        }
+        $html .= '</div></div>';
+        echo $html;
+    }
 	
 	public function uninstall_booking() {
 		global $wpdb;

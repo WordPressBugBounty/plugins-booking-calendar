@@ -339,7 +339,7 @@ class wpdevart_bc_ModelReservations {
 			}
 			$extra_id = $wpdb->get_var($wpdb->prepare('SELECT extra_id FROM ' . $wpdb->prefix . 'wpdevart_calendars WHERE id="%d"', $cal_id));
 			$extra_info = $wpdb->get_var($wpdb->prepare('SELECT data FROM ' . $wpdb->prefix . 'wpdevart_extras WHERE id="%d"', $extra_id));
-			$extra_info = json_decode($extra_info, true);
+			$extra_info = $extra_info?json_decode($extra_info, true):array();
 			if (isset($extra_info['apply']) || isset($extra_info['save'])) {
 				array_shift($extra_info);
 			}
