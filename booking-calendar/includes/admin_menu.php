@@ -30,8 +30,7 @@ class wpdevart_bc_admin_menu{
 		if ($version) {
 			$count = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'wpdevart_reservations WHERE is_new=1');
 		}
-        $count_res = $count > 0 ? ' <span class="update-plugins count-' . $count . '"><span class="resrvation-count">' . $count . '</span></span>' : '';
-	
+        $count_res = $count > 0 ? ' <span class="update-plugins count-' . $count . '"><span class="resrvation-count">' . $count . '</span></span>' : '';	
 		
 		$main_page = add_menu_page( $this->menu_name, $this->menu_name . $count_res, $permissions['calendar_page'], 'wpdevart-calendars', array($this, 'admin_functions'),WPDEVART_URL.'css/images/menu_icon.png');
 		$page_bookings =	add_submenu_page('wpdevart-calendars',  "Calendars",  "Calendars", $permissions['calendar_page'], 'wpdevart-calendars', array($this, 'admin_functions'));
@@ -68,7 +67,7 @@ class wpdevart_bc_admin_menu{
 		
 	}
 
-    /*############  Menu Requeried Scripts function ################*/
+    /*############  Menu featured scripts ################*/
 	public function hire_expert_scripts(){
 		wp_enqueue_style(WPDEVART_PLUGIN_PREFIX.'-hire-expert-admin-style', WPDEVART_URL.'css/hire_expert.css',array(),WPDEVART_VERSION);
 	}
@@ -79,6 +78,7 @@ class wpdevart_bc_admin_menu{
 		wp_enqueue_style(WPDEVART_PLUGIN_PREFIX.'-featured-themes-admin-style', WPDEVART_URL.'css/featured_themes_css.css',array(),WPDEVART_VERSION);
 	}
 
+	/*############  Menu Requeried Scripts function ################*/
 	public function menu_requeried_scripts(){
 		wp_enqueue_script('wp-color-picker');		
 		wp_enqueue_style( 'wp-color-picker' );
