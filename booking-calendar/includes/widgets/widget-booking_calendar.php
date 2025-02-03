@@ -38,7 +38,7 @@ class wpdevart_bc_Widget extends WP_Widget {
         ?>
         <p>
             <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'booking-calendar'); ?></label>
-            <input type="text" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>" class="widefat" />
+            <input type="text" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo esc_attr($title); ?>" class="widefat" />
         </p>
         <p>
             <label for="<?php echo $this->get_field_id('id'); ?>">
@@ -48,7 +48,7 @@ class wpdevart_bc_Widget extends WP_Widget {
         if($calendar_rows) {?>
             <select id="<?php echo $this->get_field_id('id'); ?>" name="<?php echo $this->get_field_name('id'); ?>">
                 <?php foreach ($calendar_rows as $calendar_row) { ?>
-                    <option value="<?php echo $calendar_row["id"]; ?>" <?php selected($ids, $calendar_row["id"]); ?>><?php echo $calendar_row["title"]; ?></option>
+                    <option value="<?php echo esc_attr($calendar_row["id"]); ?>" <?php selected($ids, $calendar_row["id"]); ?>><?php echo esc_html($calendar_row["title"]); ?></option>
                 <?php } ?>
             </select>
         <?php } else {
