@@ -49,7 +49,7 @@ class wpdevart_bc_ViewCalendars {
 							$user_info = get_userdata( $user );?>
 							<tr>
 								<td><input type="checkbox" name="check_for_action[]" class="check_for_action" value="<?php echo esc_attr($row->id); ?>"></td>
-								<td><?php echo $row->id; ?></td>
+								<td><?php echo esc_html($row->id); ?></td>
 								<td><a href="<?php echo esc_url(add_query_arg(array( 'page' => 'wpdevart-calendars', 'task' => 'edit', 'id' => esc_attr($row->id) ), admin_url('admin.php'))); ?>"><?php echo esc_html($row->title); ?></a></td>
 								<td><input type="text" value="[wpdevart_booking_calendar id=&quot;<?php echo esc_attr($row->id); ?>&quot;]" onclick="this.focus();this.select();" readonly="readonly" size="32"></td>
 								<?php if($role == "administrator"){
