@@ -491,10 +491,10 @@ class wpdevart_bc_BookingCalendar {
 				if(((isset($hour["price"]) && $hour["price"] != "") || (isset($hour["marked_price"]) && $hour["marked_price"] != "")) && (isset($hour["status"]) && $hour["status"] != "unavailable")) {
 				    $hours .= "<div class='wpdevart-hour-price'>";
 					if(isset($hour["price"]) && $hour["price"] != "") {
-						$hours .= "<span ".$hour_price." class='hour-price new-price'>".((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "before") ? $this->currency : "").$hour["price"].(((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "after") || !isset($this->theme_option['currency_pos'])) ? $this->currency : "")." </span>";
+						$hours .= "<span ".$hour_price." class='hour-price new-price'>".((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "before") ? $this->currency : "").esc_attr($hour["price"]).(((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "after") || !isset($this->theme_option['currency_pos'])) ? $this->currency : "")." </span>";
 					}
 					if(isset($hour["marked_price"]) && $hour["marked_price"] != "") {
-						$hours .= "<span class='hour-marked-price old-price'>".((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "before") ? $this->currency : "").$hour["marked_price"].(((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "after") || !isset($this->theme_option['currency_pos'])) ? $this->currency : "")."</span>";
+						$hours .= "<span class='hour-marked-price old-price'>".((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "before") ? $this->currency : "").esc_attr($hour["marked_price"]).(((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "after") || !isset($this->theme_option['currency_pos'])) ? $this->currency : "")."</span>";
 					}
 					$hours .= "</div>";
 				}
@@ -675,9 +675,9 @@ class wpdevart_bc_BookingCalendar {
 				}
 				if (isset($day_info["price"]) && $day_info["price"] != "" && !(isset($this->theme_option['unavailable_week_days']) && in_array($week_day,$this->theme_option['unavailable_week_days']))) {
 					if(!$hours_enabled){
-						$bookings .= '<div class="day-price"><span class="new-price" data-price="' . $day_info["price"] . '" data-currency="' . $this->currency . '">' .   ((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "before") ? esc_html($this->currency) : '') . esc_html($day_info["price"]) . (((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "after") || !isset($this->theme_option['currency_pos'])) ? esc_html($this->currency) : '') . '</span>';
+						$bookings .= '<div class="day-price"><span class="new-price" data-price="' . esc_attr($day_info["price"]) . '" data-currency="' . $this->currency . '">' .   ((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "before") ? esc_html($this->currency) : '') . esc_attr($day_info["price"]) . (((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "after") || !isset($this->theme_option['currency_pos'])) ? esc_html($this->currency) : '') . '</span>';
 						if (isset($day_info["marked_price"]) && $day_info["marked_price"] != "") {
-							$bookings .= '<span class="old-price">' . ((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "before") ? esc_html($this->currency) : '') . esc_html($day_info["marked_price"]) . (((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "after") || !isset($this->theme_option['currency_pos'])) ? esc_html($this->currency) : '') . '</span>';
+							$bookings .= '<span class="old-price">' . ((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "before") ? esc_html($this->currency) : '') . esc_attr($day_info["marked_price"]) . (((isset($this->theme_option['currency_pos']) && $this->theme_option['currency_pos'] == "after") || !isset($this->theme_option['currency_pos'])) ? esc_html($this->currency) : '') . '</span>';
 						}
 						$bookings .= '</div>';
 					}

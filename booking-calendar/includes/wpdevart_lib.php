@@ -196,7 +196,11 @@ class wpdevart_bc_Library {
 	public static function getData($data, $key, $type = "text", $default_value = "", $cond = null ){
 		switch($type){
 			case "text":
-			$sanitize = "sanitize_text_field";
+				$sanitize = "sanitize_text_field";
+				break;
+			case "float":
+				$sanitize = "floatval";
+				break;
 		}
         if (isset($data[$key])) {
 		  if(!is_null($cond)){	
