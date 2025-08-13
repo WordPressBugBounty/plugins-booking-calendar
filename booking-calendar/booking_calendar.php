@@ -5,7 +5,7 @@
  * Plugin URI: https://wpdevart.com/wordpress-booking-calendar-plugin
  * Author URI: https://wpdevart.com 
  * Description: WordPress Booking Calendar plugin is an awesome tool to create a booking system for your website. Create booking calendars in a few minutes.
- * Version: 3.2.28
+ * Version: 3.2.30
  * Author: WpDevArt
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: booking-calendar

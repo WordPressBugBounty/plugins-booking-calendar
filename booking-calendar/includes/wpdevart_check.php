@@ -15,6 +15,7 @@ class wpdevartCeck {
 	}
 	
 	public function check_price() {
+		
 		$data = $this->data;
 		$price = 0;
 		$main_price = $this->get_main_price();
@@ -22,26 +23,23 @@ class wpdevartCeck {
 		if(!empty($data['count_item'])) {
 			if ($data['count_item'] > $this->max_available){
 				return false;
-			}
-			
+			}			
 			$main_price = $main_price * $data['count_item'];
 		}
-		
 		if(!empty($data['extras'])) {
 			$extra_price = $this->get_extra_data($data['extras'], $main_price);
-			if ($extra_price != $data['extras_price']){
+			if (!$this->equalByPointOne($extra_price, $data['extras_price'])){
 				return false;
 			}
-			
 			$price = $main_price + $extra_price;
 		}
 		if($this->multiple) {
 			$price = $this->get_discount_price($price);
 		}
-		
-		return $price == $this->data['total_price'];
+		return $this->equalByPointOne($price, $this->data['total_price'] );
 	}
 		
+
 	private function get_extra_data($extras, $price) {
 		global $wpdb;
 		$extra_price = 0;
@@ -57,10 +55,10 @@ class wpdevartCeck {
 		foreach($extras as $key=>$extra_value) { 
 			if(isset($extra_info[$key])) {
 				if($extra_value['price_type'] == "percent") {
-					$tmp = ($price * $extra_value['price_percent'])/100;
+					$tmp = (floatval($price) * $extra_value['price_percent'])/100;
 					$extra_price = $extra_value['operation'] == '+' ? $extra_price + $tmp : $extra_price - $tmp;
 				} else {
-					$tmp = $extra_value['price_percent'];
+					$tmp = floatval($extra_value['price_percent']);
 					$extra_price = $extra_value['operation'] == '+' ? $extra_price + $tmp : $extra_price - $tmp;
 				}
 			}
@@ -127,7 +125,7 @@ class wpdevartCeck {
 						$max_available = $array["available"];
 					}
 					if($array['price']){
-						$price += (int)$array['price'];			
+						$price += floatval($array['price']);			
 					}	
 					
 					$count += 1;
@@ -136,7 +134,7 @@ class wpdevartCeck {
 			$this->day_count = $count;
 		}
 		$this->max_available = $max_available;
-		return (int)$price;
+		return floatval($price);
 	}
 	
 	private function get_hour_count($hours, $start_hour, $end_hour) {
@@ -150,7 +148,7 @@ class wpdevartCeck {
 				$max_available = $hour["available"];
 			} 
 			if($start == 1) {
-				$price += (int)$hour["price"];
+				$price += floatval($hour["price"]);
 				if($hour["available"] < $max_available) {
 					$max_available = $hour["available"];
 				}
@@ -166,6 +164,10 @@ class wpdevartCeck {
 			'count' => $count,
 			'max_available' => $max_available
 		);
+	}
+	
+	function equalByPointOne($a, $b) {
+		return abs($a - $b) < 0.1; 
 	}
 	
 }

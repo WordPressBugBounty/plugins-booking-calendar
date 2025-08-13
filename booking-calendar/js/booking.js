@@ -898,7 +898,7 @@ function change_count(el,id,pos,currency) {
 					extraprice = jQuery(this).find(".extra_price").data("extraprice");
 					if( jQuery(this).find(".extra_percent").length != 0 && jQuery(this).find(".extra_percent").is(":visible")) {
 						jQuery(this).find("input.extra_price_value").val(operation+(extraprice*(old_price*(jQuery(el).val()))/100));
-						jQuery(this).find("span.extra_price_value").html(operation+(pos=="before" ? currency : "")+(extraprice*(old_price*(jQuery(el).val()))/100)+(pos=="after" ? currency : ""));
+						jQuery(this).find("span.extra_price_value").html(operation+(pos=="before" ? currency : "")+(wpdaformatTwoDecimals(extraprice*(old_price*(jQuery(el).val()))/100))+(pos=="after" ? currency : ""));
 						extra_price_value += operation + (extraprice*(old_price*(jQuery(el).val()))/100);
 						total_price = (operation == "+")? (total_price + (extraprice*(old_price*(jQuery(el).val()))/100)) : (total_price - (extraprice*(old_price*(jQuery(el).val()))/100));
 					} else {			
@@ -909,7 +909,7 @@ function change_count(el,id,pos,currency) {
 						}
 						
 						jQuery(this).find("input.extra_price_value").val(operation + indep_count_price);
-						jQuery(this).find("span.extra_price_value").html(operation + (pos=="before" ? currency : "") + indep_count_price + (pos=="after" ? currency : ""));
+						jQuery(this).find("span.extra_price_value").html(operation + (pos=="before" ? currency : "") + wpdaformatTwoDecimals(indep_count_price) + (pos=="after" ? currency : ""));
 						total_price = (operation == "+")? (total_price + indep_count_price) : (total_price - indep_count_price);
 						extra_price_value += operation + indep_count_price;
 					}
@@ -919,7 +919,8 @@ function change_count(el,id,pos,currency) {
 	} else {
 		total_price = (old_total-price)+(old_price*(jQuery(el).val()));
 	}
-	jQuery(form_container).find(".start_total_price span").html(total_price);
+
+	jQuery(form_container).find(".start_total_price span").html(wpdaformatTwoDecimals(total_price));
 	if(jQuery(form_container).find(".price").length != 0)
 		jQuery(form_container).find(".price span").html(old_price*(jQuery(el).val()));
 	jQuery(form_container).find(".wpdevart_extra_price_value").val(eval(extra_price_value));
@@ -976,7 +977,7 @@ function change_extra(el,pos,currency) {
 			}
 			
 			if(thistype == "price") {
-				jQuery(form_container).find("."+id+" span.extra_price_value").html(thisop+(pos=="before" ? currency : "")+ indep_price +(pos=="after" ? currency : ""));
+				jQuery(form_container).find("."+id+" span.extra_price_value").html(thisop+(pos=="before" ? currency : "")+ wpdaformatTwoDecimals(indep_price) +(pos=="after" ? currency : ""));
 				jQuery(form_container).find("."+id+" input.extra_price_value").val(thisop+indep_price);
 				jQuery(form_container).find("."+id+" .extra_percent").hide();
 				jQuery(form_container).find("."+id+" .extra_price").show();
@@ -993,7 +994,7 @@ function change_extra(el,pos,currency) {
 				} else {
 					var new_price = (price*thisprice)/100;
 				}
-				jQuery(form_container).find("."+id+" span.extra_price_value").html(thisop+(pos=="before" ? currency : "")+new_price+(pos=="after" ? currency : ""));
+				jQuery(form_container).find("."+id+" span.extra_price_value").html(thisop+(pos=="before" ? currency : "")+wpdaformatTwoDecimals(new_price)+(pos=="after" ? currency : ""));
 				jQuery(form_container).find("."+id+" input.extra_price_value").val(thisop+new_price);
 				jQuery(form_container).find("."+id+" .extra_percent").html(thisprice+"%").show();
 				jQuery(form_container).find("."+id+" .extra_price").show();
@@ -1009,7 +1010,7 @@ function change_extra(el,pos,currency) {
 		jQuery(form_container).find("input.extra_price_value").each(function(){
 			extra_price_value += jQuery(this).val();
 		});
-		jQuery(form_container).find(".start_total_price span").html(total_price);
+		jQuery(form_container).find(".start_total_price span").html(wpdaformatTwoDecimals(total_price));
 		
 		if(isNaN(total_price)){
 			total_price = eval(extra_price_value);	
@@ -1080,19 +1081,21 @@ function reservation_info(el,price,price_div,total_div,extra_div,currency,id,ext
 			
 			if(type == "price") {
 				if(opt_price != 0 || opt_price != "") {
-					var option_info = "<span class='extra_percent' style='display:none;'></span><span class='extra_price' data-extraprice='"+(indep_price)+"' data-extraop='"+operation+"' style='display:inline-block;'><span class='extra_price_value'>"+operation+((pos == "before") ? currency : "")+(indep_price)+((pos == "after") ? currency : "")+"</span></span><input type='hidden' class='extra_price_value' value='"+operation+(indep_price)+"'>";
+					var option_info = "<span class='extra_percent' style='display:none;'></span><span class='extra_price' data-extraprice='"+(indep_price)+"' data-extraop='"+operation+"' style='display:inline-block;'><span class='extra_price_value'>"+operation+((pos == "before") ? currency : "")+wpdaformatTwoDecimals(indep_price)+((pos == "after") ? currency : "")+"</span></span><input type='hidden' class='extra_price_value' value='"+operation+(indep_price)+"'>";
 				} else {
 					var option_info = "<span class='extra_percent' style='display:none;'></span><span class='extra_price' data-extraprice='"+opt_price+"' data-extraop='"+operation+"'  style='display:none;'><span class='extra_price_value'></span></span><input type='hidden' class='extra_price_value' value=''>";
 				}
 				total_price = (operation == "+")? (total_price + indep_price) : (total_price - indep_price);
+				total_price = parseFloat(total_price);
 				extra_price_value += operation+indep_price;
 			} else {
 				if(opt_price != 0 || opt_price != "") {
-					var option_info = "<span class='extra_percent'>"+operation+opt_price+"%</span><span class='extra_price' data-extraprice='"+opt_price+"' data-extraop='"+operation+"'  style='display:inline-block;'><span class='extra_price_value'>"+operation+((pos == "before") ? currency : "")+((price * opt_price)/100)+((pos == "after") ? currency : "")+"</span></span><input type='hidden' class='extra_price_value' value='"+operation+((price * opt_price)/100)+"'>";
+					var option_info = "<span class='extra_percent'>"+operation+opt_price+"%</span><span class='extra_price' data-extraprice='"+opt_price+"' data-extraop='"+operation+"'  style='display:inline-block;'><span class='extra_price_value'>"+operation+((pos == "before") ? currency : "")+(wpdaformatTwoDecimals((price * opt_price)/100))+((pos == "after") ? currency : "")+"</span></span><input type='hidden' class='extra_price_value' value='"+operation+((price * opt_price)/100)+"'>";
 				} else {
 					var option_info = "<span class='extra_percent'></span><span class='extra_price' data-extraprice='"+opt_price+"' data-extraop='"+operation+"'  style='display:none;'><span class='extra_price_value'></span></span><input type='hidden' class='extra_price_value' value=''>";
 				}
 				total_price = (operation == "+")? (total_price + ((price * opt_price)/100)) : (total_price - ((price * opt_price)/100));
+				total_price = parseFloat(total_price);
 				extra_price_value += operation+((price * opt_price)/100);
 			}
 			extra_div += "<div class='wpdevart-extra-info wpdevart-extra-"+sel_index+" reserv_info_row "+(jQuery(select).attr("id"))+"' data-id='"+(jQuery(select).attr("id"))+"'><span class='reserv_info_cell'>"+label+"</span><span class='reserv_info_cell_value'><span class='option_label'>"+option_label+"</span>"+option_info+"</span></div>";
@@ -1103,9 +1106,9 @@ function reservation_info(el,price,price_div,total_div,extra_div,currency,id,ext
 		total_price = eval(extra_price_value);	
 	}
 	if(price != 0) {
-		price_div = (hide_price == 1) ? "" : "<div class='reserv_info_row'><span class='reserv_info_cell'>"+(jQuery(el).closest(".booking_calendar_main_container").data("price"))+"</span><span class='reserv_info_cell_value price' data-price='"+price+"'>"+((pos == "before") ? currency : "")+"<span>"+price+"</span>"+((pos == "after") ? currency : "")+"</span></div>";
+		price_div = (hide_price == 1) ? "" : "<div class='reserv_info_row'><span class='reserv_info_cell'>"+(jQuery(el).closest(".booking_calendar_main_container").data("price"))+"</span><span class='reserv_info_cell_value price' data-price='"+price+"'>"+((pos == "before") ? currency : "")+"<span>"+wpdaformatTwoDecimals(price)+"</span>"+((pos == "after") ? currency : "")+"</span></div>";
 	}
-	total_div = (hide_price == 1) ? "" : "<div class='wpdevart-total-price reserv_info_row'><span class='reserv_info_cell'>" + total_tr + "</span><span class='reserv_info_cell_value total_price'><span class='start_total_price'>"+((pos == "before") ? currency : "")+"<span>" + total_price + "</span>"+((pos == "after") ? currency : "")+"</span><span class='sale_total_price'></span></span></div>";
+	total_div = (hide_price == 1) ? "" : "<div class='wpdevart-total-price reserv_info_row'><span class='reserv_info_cell'>" + total_tr + "</span><span class='reserv_info_cell_value total_price'><span class='start_total_price'>"+((pos == "before") ? currency : "")+"<span>" + wpdaformatTwoDecimals(total_price) + "</span>"+((pos == "after") ? currency : "")+"</span><span class='sale_total_price'></span></span></div>";
 	
 	if(single_date === false) {
 		if(hours_enabled) {
@@ -1390,5 +1393,8 @@ function wpdevarDdateDiff (date1,date2) {
 	dt2 = new Date(date2);
 	return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
 }
-
+function wpdaformatTwoDecimals(value) {	
+    let num = Number(value); // convert to number
+    return Number.isInteger(num) ? num : Number(num.toFixed(2));
+}
 
