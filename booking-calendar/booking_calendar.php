@@ -5,7 +5,7 @@
  * Plugin URI: https://wpdevart.com/wordpress-booking-calendar-plugin
  * Author URI: https://wpdevart.com 
  * Description: WordPress Booking Calendar plugin is an awesome tool to create a booking system for your website. Create booking calendars in a few minutes.
- * Version: 3.2.30
+ * Version: 3.2.34
  * Author: WpDevArt
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: booking-calendar
@@ -109,7 +109,7 @@ class wpdevart_bc_calendar {
 		if (!$version && !get_option("wpdevart_booking_version")) {
 			$wpdevart_bc_install_database->install_databese();
 			add_option("wpdevart_booking_version_new", $new_version, '', 'no');
-		} elseif (($version && version_compare($version, $new_version, '<')) || get_option("wpdevart_booking_version") != "0" || $recreate_db) {
+		} elseif (($version && version_compare($version, $new_version, '<')) || get_option("wpdevart_booking_version") != "0" || ($recreate_db && isset($_GET['_wpdevart_nonce']) && wp_verify_nonce($_GET['_wpdevart_nonce'], 'recreate_db_action'))) {
 			$version = !$version ? "10.10" : get_option("wpdevart_booking_version_new");
 			$wpdevart_bc_install_database->update_databese($version, $recreate_db);
 			update_option("wpdevart_booking_version_new", $new_version, "", "no");

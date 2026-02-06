@@ -1273,21 +1273,21 @@ class wpdevart_bc_Library {
 				<span class="displaying-num"><?php echo $items_count; ?> items</span>
 				<?php 
 				if($items_count > 20) {
-					$first = "first-page";
-					$prev = "prev-page";
-					$next = "next-page";
-					$last = "last-page";
+					$first = "first-page tablenav-pages-navspan button";
+					$prev = "prev-page tablenav-pages-navspan button";
+					$next = "next-page tablenav-pages-navspan button";
+					$last = "last-page tablenav-pages-navspan button";
 					if($wpdevart_page==1) {
-						$first = "first-page disabled";
-						$prev = "prev-page disabled";
-						$next = "next-page";
-						$last = "last-page"; 
+						$first = "tablenav-pages-navspan button first-page disabled";
+						$prev = "tablenav-pages-navspan button prev-page disabled";
+						$next = "tablenav-pages-navspan button next-page";
+						$last = "tablenav-pages-navspan button last-page"; 
 					}
 					if($wpdevart_page>=(1+($items_count-$items_count%20)/20) ) {
-						$first = "first-page ";
-						$prev = "prev-page";
-						$next = "next-page disabled";
-						$last = "last-page disabled"; 
+						$first = "tablenav-pages-navspan button first-page ";
+						$prev = "tablenav-pages-navspan button prev-page";
+						$next = "tablenav-pages-navspan button next-page disabled";
+						$last = "tablenav-pages-navspan button last-page disabled"; 
 					} ?>     
 					<span class="pagination-links">
 						<a class="<?php echo $first; ?>" href="javascript:get_page(<?php echo $wpdevart_page; ?>,-2);">«</a>

@@ -40,7 +40,7 @@ class wpdevart_bc_ViewGlobalsettings {
 							'title' => __('If you have a problem with the database please press this button','booking-calendar'),
 							'description' =>__('If you have a problem with the database please press this button','booking-calendar'),
 							'button' => __('Recreate database','booking-calendar'),
-							'link' => admin_url( 'admin.php?page=wpdevart-global-settings&task=recreate_db' ),
+							'link' => wp_nonce_url( admin_url('admin.php?page=wpdevart-global-settings&task=recreate_db'), 'recreate_db_action', '_wpdevart_nonce' ),
 							'type' => 'button',
 							'default' => ''
 						)

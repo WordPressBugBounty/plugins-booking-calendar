@@ -1676,3 +1676,6 @@ float: left;
     float: none;
 }
 }
+.wpdevart-table th.check-column input{
+    top:8px;
+}
