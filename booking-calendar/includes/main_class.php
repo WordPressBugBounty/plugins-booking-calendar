@@ -415,7 +415,7 @@ class wpdevart_Main {
 			$res_id = esc_html($_POST['wpdevart_reserv_id']);
 		}
 
-		if(isset($reserv) && $reserv == "true") {
+		if(isset($reserv) && $reserv == "true" && current_user_can('manage_options')) {
 			echo $this->main_booking_calendar_res($date,true);
 		} elseif(isset($selected['hours']) && $selected['hours'] == "true") {
 			echo $this->main_booking_calendar($id, $res_id,'',false,array(),array(),"",$selected);
